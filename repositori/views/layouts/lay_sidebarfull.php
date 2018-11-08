@@ -43,13 +43,13 @@
                       ?>
                       <li><a><i class="fa fa-book"></i> Dokumen <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                          <li><a href="../docsmgmt/newdoc.php?s=n"><i class="fa fa-edit"></i>Pendaftaran Dokumen</a></li><!-- s=n (source=new) -->
-                          <li><a href="../docsmgmt/newdoc_1.php?s=n"><i class="fa fa-edit"></i>Pendaftaran Dokumen Trial</a></li><!-- s=n (source=new) -->
+                          <li><a href="../docsmgmt/newdoc.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen</a></li><!-- s=n (source=new) -->
+                          <li><a href="../docsmgmt/newdoc_1.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen Trial</a></li><!-- s=n (source=new) -->
                           <!-- <li><a href="../docsmgmt/listdoc.php?s=n"><i class="fa fa-table"></i>Senarai Dokumen Alt</a></li> -->
                           <!-- <li><a href="../docsmgmt/listdoc_o.php?s=n"><i class="fa fa-table"></i>Senarai Dokumen Asal</a></li> -->
-                          <li><a href="../docsmgmt/searchdoc.php?s=n"><i class="fa fa-search"></i>Carian Dokumen</a></li>
+                          <li><a href="../docsmgmt/searchdoc.php"><i class="fa fa-search"></i>Carian Dokumen</a></li>
                           <!-- <li><a href="../docsmgmt/searchdoc_o.php?s=n"><i class="fa fa-search"></i>Carian Dokumen Asal</a></li> -->
-                          <li><a href="../docsmgmt/reportsearchdoc.php?s=n"><i class="fa fa-file-alt"></i>Laporan Dokumen</a></li>
+                          <li><a href="../docsmgmt/reportsearchdoc.php"><i class="fa fa-file-alt"></i>Laporan Dokumen</a></li>
                           <li><a><i class="fa fa-bar-chart"></i>Statistik Dokumen<span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
                               <!-- <li><a href="../docsmgmt/docreport_all.php?s=n">Keseluruhan Dokumen</a></li> -->
@@ -97,7 +97,7 @@
                       ?>
                       <li><a><i class="fa fa-users"></i> Pentadbir <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                          <li><a href="../usersmgmt/newuser.php?s=n"><i class="fa fa-edit"></i>Pendaftaran Pentadbir</a></li>
+                          <li><a href="../usersmgmt/newuser.php"><i class="fa fa-edit"></i>Pendaftaran Pentadbir</a></li>
                           <li><a href="../usersmgmt/listuser.php"><i class="fa fa-table"></i>Senarai Pentadbir</a></li>
                         </ul>
                       </li>
