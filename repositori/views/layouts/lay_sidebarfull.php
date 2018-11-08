@@ -66,33 +66,6 @@
                     }
                     ?>
                     <?php  
-                    if ($_SESSION['status_pentadbir_dokumen'] == 2) {
-                      ?>
-                      <li><a><i class="fa fa-book"></i> Dokumen II <span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu">
-                          <li>
-                            <a href="../docsmgmt/newdoc.php">
-                              <i class="fa fa-edit"></i>
-                              Pendaftaran Dokumen
-                            </a>
-                          </li>
-                          <li><a href="../sysmgmt/categorymgmt.php"><i class="fa fa-table"></i>Kategori Dokumen</a></li>
-                          <li><a href="../sysmgmt/ministrymgmt.php"><i class="fa fa-table"></i>Kementerian</a></li>
-                          <li><a href="../sysmgmt/agencymgmt.php"><i class="fa fa-table"></i>Jabatan / Agensi</a></li>
-                          <li><a href="../sysmgmt/divisionmgmt.php"><i class="fa fa-table"></i>Bahagian</a></li>
-                          <li><a href="../sysmgmt/docstatusmgmt.php"><i class="fa fa-table"></i>Status Dokumen</a></li>
-                          <li><a href="../sysmgmt/strategiccoremgmt.php"><i class="fa fa-table"></i>Teras Strategik</a></li>
-                          <li><a href="../sysmgmt/sectormgmt.php"><i class="fa fa-table"></i>Sektor</a></li>
-                          <!-- <li><a href="../sysmgmt/datamgmttemplate.php">Template</a></li> -->
-                          <!-- <li><a href="../sysmgmt/datamgmtcleantemplate.php">Template Clean</a></li> -->
-                          <li><a href="../sysmgmt/nametitlemgmt.php"><i class="fa fa-table"></i>Gelaran Nama</a></li>
-                          <!-- <li><a href="../sysmgmt/testfilename.php"><i class="fa fa-table"></i>Test Filename</a></li> -->
-                        </ul>
-                      </li>
-                      <?php
-                    }
-                    ?>
-                    <?php  
                     if ($_SESSION['status_pentadbir_pengguna'] == 3) {
                       ?>
                       <li><a><i class="fa fa-users"></i> Pentadbir <span class="fa fa-chevron-down"></span></a>
