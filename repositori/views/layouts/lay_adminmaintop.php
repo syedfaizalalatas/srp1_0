@@ -12,6 +12,7 @@
   <title><?php include "../../title.php"; ?></title>
 
   <?php require "../engine/mysqlidbconnect.php"; ?>
+  <?php require "../engine/agency_info.php"; ?>
   <?php require "../engine/function.php"; ?>
   <?php require "lay_csslink.php"; ?>
   <?php  
