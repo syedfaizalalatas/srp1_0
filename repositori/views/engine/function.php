@@ -8,6 +8,45 @@
 # **** Database Operations ****
 
 # searching for one name
+function fnGetSystemSettingInfo(){
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
+
+    $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+
+    $ssi_kod_jabatan = $_SESSION['kod_jabatan'];
+    $ssi_sql = "SELECT * FROM tetapan_jabatan WHERE jabatan_kod_jab = '$ssi_kod_jabatan'";
+    // kira bil rekod ditemui
+    $rs=$conn->query($ssi_sql);
+    if($rs === false) {
+        trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+    } else {
+        $rows_returned = $rs->num_rows;
+    }
+
+    // kalau jumpa satu baru simpan ke dalam session
+    if ($rows_returned === 1) {
+        // fnRunAlert("Satu rekod maklumat tetapan agensi telah ditemui.");
+        $rs=$conn->query($ssi_sql);
+
+        if($rs === false) {
+            trigger_error('Wrong SQL: ' . $ssi_sql . ' Error: ' . $conn->error, E_USER_ERROR);
+        } else {
+            $arr = $rs->fetch_all(MYSQLI_ASSOC);
+        }
+        foreach($arr as $row) {
+            $_SESSION['bil_rekod_semuka'] = $row['tetapan_bil_rekod_semuka'];
+        }
+        // fnRunAlert("Bil. Rekod Semuka = ".$_SESSION['bil_rekod_semuka']);
+    } 
+    // kalau ada lebih daripada satu atau tak ada, notify admin
+    else {
+        fnRunAlert("Lebih daripada satu atau tiada rekod maklumat tetapan agensi yang ditemui.");
+    }
+}
+
 function searchnameloginmysqli(){
     $name = $_SESSION['slashedtxtnama'];
     $sql = "SELECT name FROM users WHERE name = '$name'";
