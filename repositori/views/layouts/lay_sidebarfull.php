@@ -45,7 +45,7 @@
                         <ul class="nav child_menu">
                           <li><a href="../docsmgmt/newdoc.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen</a></li><!-- s=n (source=new) -->
                           <li><a href="../docsmgmt/newdoc_1.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen Trial</a></li><!-- s=n (source=new) -->
-                          <!-- <li><a href="../docsmgmt/listdoc.php?s=n"><i class="fa fa-table"></i>Senarai Dokumen Alt</a></li> -->
+                          <li><a href="../docsmgmt/listdoc.php"><i class="fa fa-table"></i>Senarai Dokumen Alt</a></li>
                           <!-- <li><a href="../docsmgmt/listdoc_o.php?s=n"><i class="fa fa-table"></i>Senarai Dokumen Asal</a></li> -->
                           <li><a href="../docsmgmt/searchdoc.php"><i class="fa fa-search"></i>Carian Dokumen</a></li>
                           <!-- <li><a href="../docsmgmt/searchdoc_o.php?s=n"><i class="fa fa-search"></i>Carian Dokumen Asal</a></li> -->
