@@ -17,6 +17,7 @@
   <?php require "lay_csslink.php"; ?>
   <?php  
   fnCheckLoginStatus();
+  fnGetSystemSettingInfo();
   ?>
   <!-- untuk upload form -->
   <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
