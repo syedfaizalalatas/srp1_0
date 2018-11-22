@@ -1,6 +1,12 @@
 <?php session_start(); ?>
 <?php require "../layouts/lay_adminmaintop.php"; ?>
 <?php  
+fnResetSessionsForPages();
+
+if ($_SESSION['pageSource'] == 'new') {
+  $_GET['s'] = 'n';
+}
+
 # clear session from other forms newuser, updateuser, updatedoc
 if (isset($_GET['s']) == 'n') {
   // form is opened from the sidebar, clear the session
@@ -165,7 +171,8 @@ if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
     if ($_SESSION['verifiedOK'] == 1) {
       # semak jika fail yang hendak dimuat naik telah dipilih
       # Kira bilangan fail yang hendak dimuatnaik dan pastikan minimum 1 fail.
-      fnPreUploadFilesRename();
+      // fnPreUploadFilesRename(); # yang ni skip dulu... terus bagi $_SESSION['touploadOK'] = 1
+      $_SESSION['touploadOK'] = 1;
     }
     # if file is uploaded, save record
 
@@ -192,6 +199,7 @@ if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
       fnInsertNewDoc($DBServer,$DBUser,$DBPass,$DBName);
       if ($_SESSION['insertOK'] == 1) {
         fnRunAlert("Rekod BERJAYA disimpan.");
+        $_SESSION['langkah'] = 2;
         // fnClearNewDocForm();
         fnClearSessionNewDoc();
       }
@@ -206,7 +214,7 @@ if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
     }
   }
 }
-$_SESSION['langkah'] = 2;
+// $_SESSION['langkah'] = 1;
 ?>
 <!-- page content -->
 <div class="right_col" role="main">

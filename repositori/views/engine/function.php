@@ -64,6 +64,28 @@ function searchnameloginmysqli01($inputname){
     $_SESSION['loginnamecount'] = $data;
 }
 
+function fnResetSessionsForPages(){
+    # the session for this page has to be cleared before this page is opened.
+    # when a user clicks on any menu item, the page will start clean, which means the system will reset everything
+    # list all menu items and their code
+    /*
+      ldr - list document records
+      ndr - new doc record
+      sdr - search doc record
+      rdr - reports of doc records
+      sdrc
+
+      status
+        n - new
+        v - view form opened; data is saved in array
+        u - update form opened
+    */
+    $_SESSION['pageSource'] = 'new'; # for all related page
+    $_SESSION['currentPage'] = 1; # for page with pagination
+    $_SESSION['langkah'] = 1; # for newdoc_v2.php
+    $_SESSION['statusDaftarDokumen'] = 'baharu'; # for newdoc_v2.phps
+}
+
 
 # PBKDF2 Generator
 /*
