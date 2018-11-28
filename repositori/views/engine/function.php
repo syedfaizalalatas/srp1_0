@@ -6150,7 +6150,7 @@ function fnShowDocTableContentForAdvancedSearch($a,$b,$c,$d){
                     <td><?php echo $counter ?></td>
                     <td hidden><?php echo $row[$field01name] ?></td>
                     <td><?php echo stripslashes(strtoupper($row['tajuk_dok'])) ?> <?php echo $perkataanBil ?> <?php echo $bilDok ?><?php echo $strokeBil ?><?php echo $row['tahun_dok'] ?></td>
-                    <td style='align-content: center;' align='center'>
+                    <td hidden style='align-content: center;' align='center'>
                         <button type='submit' id='btn_papar_borang_kemaskini' name='btn_papar_borang_kemaskini' class='btn btn-success' title='Kemaskini' value='<?php echo $row['kod_dok'] ?>'><i class='fa fa-edit'></i></button>
                         <button hidden type='submit' id='btn_papar_perincian_dokumen' name='btn_papar_perincian_dokumen' class='btn btn-success' title='Papar' value='<?php echo $row['kod_dok'] ?>'><i class='fa fa-eye'></i></button>
                         <?php 
