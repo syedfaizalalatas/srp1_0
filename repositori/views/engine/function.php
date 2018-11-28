@@ -2333,6 +2333,82 @@ function fnInsertNewDoc($a,$b,$c,$d){
     fnClearSessionNewDoc();
 }
 
+function fnInsertNewDoc_v2($a,$b,$c,$d){
+    $DBServer = $a;
+    $DBUser   = $b;
+    $DBPass   = $c;
+    $DBName   = $d;
+
+    $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+
+    // check connection
+    if ($conn->connect_error) {
+        trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+    }
+
+    $sql='INSERT INTO dokumen (tajuk_dok, bil_dok, tahun_dok, des_dok, kod_kat, kod_sektor, kod_bah, kod_kem, kod_jab, kod_status, id_pendaftar, tarikh_wujud, tarikh_dok, nama_dok_asal, nama_dok_disimpan, tarikh_kemaskini, tarikh_mansuh, tarikh_pinda, tarikh_serah, kod_jab_asal, kod_jab_baharu, tag_dokumen, tajuk_dok_asal, tajuk_dok_baharu, catatan_dokumen, tanda_hapus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    // $_SESSION['tajuk_dok'];
+    // $_SESSION['bil_dok'];
+    // $_SESSION['tahun_dok']
+    // $_SESSION['des_dok']
+    // $_SESSION['kod_kat']
+    // $_SESSION['kod_sektor']
+    // $_SESSION['kod_teras']
+    // $_SESSION['kod_kem']
+    // $_SESSION['kod_jab']
+    // $_SESSION['kod_status']
+    // $_SESSION['id_pendaftar']
+    // $_SESSION['tarikh_dok']
+
+    /* Prepare statement */
+    $stmt = $conn->prepare($sql);
+    if($stmt === false) {
+        trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+    }
+
+    /* Bind parameters. TYpes: s = string, i = integer, d = double,  b = blob */
+    $stmt->bind_param('siisiiiiiiissssssssiissssi',$_SESSION['tajuk_dok'],$_SESSION['bil_dok'],$_SESSION['tahun_dok'],$_SESSION['des_dok'],$_SESSION['kod_kat'],$_SESSION['kod_sektor'],$_SESSION['kod_bah'],$_SESSION['kod_kem'],$_SESSION['kod_jab'],$_SESSION['kod_status'],$_SESSION['id_pendaftar'],$_SESSION['tarikh_wujud'],$_SESSION['tarikh_dok'],$_SESSION['nama_fail_asal'],$_SESSION['nama_fail_disimpan'],$_SESSION['tarikh_kemaskini'],$_SESSION['tarikh_mansuh'],$_SESSION['tarikh_pinda'],$_SESSION['tarikh_serah'],$_SESSION['kod_jab_asal'],$_SESSION['kod_jab_baharu'],$_SESSION['tag_dokumen'],$_SESSION['tajuk_dok_asal'],$_SESSION['tajuk_dok_baharu'],$_SESSION['catatan_dokumen'], $tanda_hapus);
+
+    $tanda_hapus = 1;
+    
+    /* Execute statement */
+    // $stmt->execute();
+    # 20170126 trying this
+    // fnRunAlert("Ni sebelum insert dok sokongan.");
+    if ($stmt->execute()) {
+        // fnRunAlert("Ni selepas execute stmt.");
+        $_SESSION['insertOK'] = 1; # tanda rekod berjaya dimasukkan dalam table dokumen
+        if ($_SESSION['slot01_OK'] == 1) {
+            // fnRunAlert("Ni baru mula if slot01.");
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot01 berjaya direkod ke db.";
+            fnInsertDokSokongan($_SESSION['nama_dok_asal_slot01'], $_SESSION['nama_dok_disimpan_slot01']);
+            // fnInsertDokSokongan("$_SESSION[nama_dok_asal_slot01]", "$_SESSION[nama_dok_disimpan_slot01]");
+            // fnRunAlert("Ni selepas insert dok sokongan slot01.");
+        }
+        if ($_SESSION['slot02_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot02 berjaya direkod ke db.";
+            fnInsertDokSokongan($_SESSION['nama_dok_asal_slot02'], $_SESSION['nama_dok_disimpan_slot02']);
+        }
+        if ($_SESSION['slot03_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot03 berjaya direkod ke db.";
+            fnInsertDokSokongan($_SESSION['nama_dok_asal_slot03'], $_SESSION['nama_dok_disimpan_slot03']);
+        }
+        if ($_SESSION['slot04_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot04 berjaya direkod ke db.";
+            fnInsertDokSokongan($_SESSION['nama_dok_asal_slot04'], $_SESSION['nama_dok_disimpan_slot04']);
+        }
+        $_SESSION['mesejBerjaya'] = ""; #kosongkan mesej berjaya
+    }
+    else {
+        $_SESSION['insertOK'] = 0;
+    }
+
+    $stmt->close();
+
+    $conn->close();
+    fnClearSessionNewDoc();
+}
+
 function fnUpdateDokSokongan($namaDokAsal,$namaDokDisimpan,$kodDokFK){
     $DBServer       = $_SESSION['DBServer'];
     $DBUser         = $_SESSION['DBUser'];
