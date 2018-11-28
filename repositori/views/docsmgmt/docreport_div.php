@@ -371,6 +371,9 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
             <div class="title_right">
               <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                 <div class="input-group">
+                  <span class="input-group-btn">
+                    <button class="btn btn-secondary" onclick="jsfnPrint()"><span class="fa fa-print"></span></button> 
+                  </span>
                   <input type="text" id="txt_search_doclist" name="txt_search_doclist" class="form-control" placeholder="Cari...">
                   <span class="input-group-btn">
                     <input type="submit" id="btn_search_doclist" name="btn_search_doclist" class="btn btn-default" value="Cari!">
@@ -401,7 +404,7 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
               </tbody>
             </table>
             </form>
-            <div class="col-md-12 text-center">
+            <div hidden class="col-md-12 text-center">
               <ul class="pagination pagination-sm pager" id="myPager"></ul>
             </div>
           </div>
@@ -410,6 +413,11 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
     </div>
     <br>&nbsp;<br>&nbsp;<br>&nbsp;
     <!-- Habis borang dummy baharu -->
+    <script>
+      function jsfnPrint() {
+        window.print();
+      }
+    </script>
     <script src="../vendors/jquery/dist/jquery.min.js"></script>
     <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../engine/bootstrap.tablesorter.js"></script>
@@ -456,7 +464,8 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
             }
         }); 
       });
-      $('#myTableBody').pageMe({pagerSelector:'#myPager',showPrevNext:true,hidePageNumbers:false,perPage:<?php echo $_SESSION['numPerPage']; ?>});
+      $('#myTableBody').pageMe({pagerSelector:'#myPager',showPrevNext:true,hidePageNumbers:false,perPage:<?php echo 100; ?>});
+      // $('#myTableBody').pageMe({pagerSelector:'#myPager',showPrevNext:true,hidePageNumbers:false,perPage:<?php // echo $_SESSION['numPerPage']; ?>});
 
     </script>
     <!-- /page content -->
