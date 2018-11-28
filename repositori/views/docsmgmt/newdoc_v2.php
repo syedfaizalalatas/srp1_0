@@ -1,11 +1,23 @@
 <?php session_start(); ?>
 <?php require "../layouts/lay_adminmaintop.php"; ?>
 <?php  
-fnResetSessionsForPages();
+
+/*
+n = new
+s1 = step 1
+s2 = step 2
+*/
+fnRunAlert("source = ".$_GET['s']);
+if ($_GET['s'] != 's1' AND $_GET['s'] != 's2') {
+  fnResetSessionsForPages();
+}
 
 if ($_SESSION['pageSource'] == 'new') {
   $_GET['s'] = 'n';
 }
+
+fnRunAlert("source = ".$_GET['s']);
+fnRunAlert("pageSource = ".$_SESSION['pageSource']);
 
 # clear session from other forms newuser, updateuser, updatedoc
 if (isset($_GET['s']) == 'n') {
@@ -17,20 +29,24 @@ if (isset($_GET['s']) == 'n') {
   fnClearSessionNewDoc();
   fnClearSessionListDoc();
 }
+
 // when 'btn_simpan_dok_baru' is pressed/clicked
-if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
+if (isset($_POST['btn_simpan_dok_baru']) AND $_GET['s']=='s1') {
   fnClearSessionNewDoc();
   $_SESSION['tajuk_dok'] = $_POST['tajuk_dokumen'];
   $_SESSION['tajuk_dok'] = checkAndRevalue($_SESSION['tajuk_dok']);
   // fnRunAlert("$_SESSION[tajuk_dok]");
   $_SESSION['bil_dok'] = $_POST['bil_dokumen'];
+  $_SESSION['bil_dok_step2'] = $_POST['bil_dokumen'];
   // $_SESSION['bil_dok'] = checkAndRevalue($_SESSION['bil_dok']);
   $_SESSION['tahun_dok'] = $_POST['tahun_dokumen'];
+  $_SESSION['tahun_dok_step2'] = $_POST['tahun_dokumen'];
   $_SESSION['tahun_dok'] = checkAndRevalue($_SESSION['tahun_dok']);
   $_SESSION['des_dok'] = $_POST['des_dokumen'];
   $_SESSION['des_dok'] = checkAndRevalue($_SESSION['des_dok']);
   $_SESSION['kod_kat'] = $_POST['kod_kat'];
   $_SESSION['kod_kat'] = checkAndRevalue($_SESSION['kod_kat']);
+  $_SESSION['kod_kat_step2'] = checkAndRevalue($_SESSION['kod_kat']);
   $_SESSION['kod_sektor'] = $_POST['kod_sektor'];
   $_SESSION['kod_sektor'] = checkAndRevalue($_SESSION['kod_sektor']);
   $_SESSION['kod_bah'] = $_POST['kod_bah'];
@@ -172,6 +188,10 @@ if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
       # semak jika fail yang hendak dimuat naik telah dipilih
       # Kira bilangan fail yang hendak dimuatnaik dan pastikan minimum 1 fail.
       // fnPreUploadFilesRename(); # yang ni skip dulu... terus bagi $_SESSION['touploadOK'] = 1
+      $_SESSION['slot01_OK'] = 0;
+      $_SESSION['slot02_OK'] = 0;
+      $_SESSION['slot03_OK'] = 0;
+      $_SESSION['slot04_OK'] = 0;
       $_SESSION['touploadOK'] = 1;
     }
     # if file is uploaded, save record
@@ -196,7 +216,7 @@ if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
         // fnRunAlert("Dah upload slot04");
       }
       fnInsertCheckedTeras($DBServer,$DBUser,$DBPass,$DBName);
-      fnInsertNewDoc($DBServer,$DBUser,$DBPass,$DBName);
+      fnInsertNewDoc_v2($DBServer,$DBUser,$DBPass,$DBName);
       if ($_SESSION['insertOK'] == 1) {
         fnRunAlert("Rekod BERJAYA disimpan.");
         $_SESSION['langkah'] = 2;
@@ -214,6 +234,137 @@ if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
     }
   }
 }
+
+// when 'btn_simpan_dok_sokongan_baharu' is pressed/clicked
+if (isset($_POST['btn_simpan_dok_sokongan_baharu']) AND $_GET['s']=='s2') {
+  fnClearSessionNewDoc();
+  # dapatkan kategori dok yang telah disimpan
+  $_SESSION['kod_kat_step2'];
+  # dapatkan bil_dok yang telah disimpan
+  $_SESSION['bil_dok_step2'];
+  # dapatkan tahun dok yang telah disimpan
+  $_SESSION['tahun_dok_step2'];
+  # dapatkan  kod_dok menggunakan maklumat 3 medan di atas
+/*
+Fatal error: Uncaught Error: Call to undefined function fnGetDocCodeUsingAvailableInfo() in C:\WinNMP\WWW\srp1_0_uploading_upgrade\srp1_0\repositori\views\docsmgmt\newdoc_v2.php:248 Stack trace: #0 {main} thrown in C:\WinNMP\WWW\srp1_0_uploading_upgrade\srp1_0\repositori\views\docsmgmt\newdoc_v2.php on line 248
+*/
+
+
+  function fnGetDocCodeUsingAvailableInfo(){
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
+    $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+
+    // check connection
+    if ($conn->connect_error) {
+        trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+    }
+
+    $sql="SELECT kod_dok FROM dokumen WHERE kod_kat = ".$_SESSION['kod_kat_step2']." AND bil_dok = ".$_SESSION['bil_dok_step2']." AND tahun_dok = ".$_SESSION['tahun_dok_step2'];
+
+    $rs=$conn->query($sql);
+
+    if($rs === false) {
+        trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+    } else {
+        $arr = $rs->fetch_all(MYSQLI_ASSOC);
+    }
+    foreach($arr as $row) {
+      $_SESSION['kod_dok_step2'] = $row['kod_dok'];
+      fnRunAlert("kod_dok = ".$_SESSION['kod_dok_step2']);
+    }
+
+  }
+  fnGetDocCodeUsingAvailableInfo();
+/*
+Fatal error: Wrong SQL: SELECT kod_dok FROM dokumen WHERE kod_kat = $_SESSION[kod_kat_step2] AND bil_dok = $_SESSION[bil_dok_step2] AND tahun_dok = $_SESSION[tahun_dok_step2] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '[kod_kat_step2] AND bil_dok = $_SESSION[bil_dok_step2] AND tahun_dok = $_SESSION' at line 1 in C:\WinNMP\WWW\srp1_0_uploading_upgrade\srp1_0\repositori\views\docsmgmt\newdoc_v2.php on line 270
+*/
+
+
+
+  $_SESSION['tarikh_kemaskini'] = date("Y-m-d");
+  $_SESSION['tarikh_kemaskini'] = checkAndRevalue($_SESSION['tarikh_kemaskini']);
+  fnSetTarikhStatusDoc();
+
+  # start verifying form
+  $_SESSION['verifiedOK'] = 3; // initial value
+  if ($_SESSION['verifiedOK'] != 0) {
+    # 1. user logged in?
+    # semak jika ada loggedinid; user yang sah telah log masuk
+    if ($_SESSION['loggedinid'] != 0) {
+      $_SESSION['verifiedOK'] = 1;
+    }
+    else {
+      $_SESSION['verifiedOK'] = 0;
+      fnRunAlert("Maaf, borang tidak dapat diproses kerana pengguna tidak log masuk dengan sah.");
+    }
+    # semak jika ada duplikasi dokumen
+    if ($_SESSION['verifiedOK'] == 1) {
+      fnCheckSavedDoc($DBServer,$DBUser,$DBPass,$DBName);
+      if ($_SESSION['duplicatedoc'] == 0) {
+        $_SESSION['verifiedOK'] = 1;
+      }
+      else {
+        $_SESSION['verifiedOK'] = 0;
+      }
+    }
+    # muatnaik dokumen
+    /*
+    maklumat fail tidak akan disimpan di dalam table dokumen lagi tapi disimpan dalam table dok_sokongan
+     */
+    if ($_SESSION['verifiedOK'] == 1) {
+      # semak jika fail yang hendak dimuat naik telah dipilih
+      # Kira bilangan fail yang hendak dimuatnaik dan pastikan minimum 1 fail.
+      // fnPreUploadFilesRename(); # yang ni skip dulu... terus bagi $_SESSION['touploadOK'] = 1
+      $_SESSION['slot01_OK'] = 0;
+      $_SESSION['slot02_OK'] = 0;
+      $_SESSION['slot03_OK'] = 0;
+      $_SESSION['slot04_OK'] = 0;
+      $_SESSION['touploadOK'] = 1;
+    }
+    # if file is uploaded, save record
+
+    if (isset($_SESSION['touploadOK']) AND $_SESSION['touploadOK'] == 1 AND $_SESSION['verifiedOK'] == 1) {
+      # baru boleh upload file
+      $_SESSION['uploadOk'] = 0; // Assign initial value to 'uploadOk'
+      if ($_SESSION['slot01_OK'] == 1) {
+        fnUploadFilesRename("nama_dok"); // the altered original version (the working one! 20161018)
+        // fnRunAlert("Dah upload slot01");
+      }
+      if ($_SESSION['slot02_OK'] == 1) {
+        fnUploadFilesRename("nama_dok_01");
+        // fnRunAlert("Dah upload slot02");
+      }
+      if ($_SESSION['slot03_OK'] == 1) {
+        fnUploadFilesRename("nama_dok_02");
+        // fnRunAlert("Dah upload slot03");
+      }
+      if ($_SESSION['slot04_OK'] == 1) {
+        fnUploadFilesRename("nama_dok_03");
+        // fnRunAlert("Dah upload slot04");
+      }
+      fnInsertCheckedTeras($DBServer,$DBUser,$DBPass,$DBName);
+      fnInsertNewDoc_v2($DBServer,$DBUser,$DBPass,$DBName);
+      if ($_SESSION['insertOK'] == 1) {
+        fnRunAlert("Rekod BERJAYA disimpan.");
+        $_SESSION['langkah'] = 2;
+        // fnClearNewDocForm();
+        fnClearSessionNewDoc();
+      }
+      else {
+        fnRunAlert("Rekod GAGAL disimpan.");
+      }
+      # kosongkan sessions
+    }
+    # jika fail tidak dapat dimuatnaik, input akan dipaparkan semula
+    elseif (!isset($_SESSION['touploadOK']) OR $_SESSION['touploadOK'] == 0 OR $_SESSION['verifiedOK'] == 0) {
+      fnRunAlert("Rekod TIDAK disimpan.");
+    }
+  }
+}
+
 // $_SESSION['langkah'] = 1;
 ?>
 <!-- page content -->
@@ -227,6 +378,7 @@ if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
     <!-- BORANG MUAT NAIK DOKUMEN -->
     <?php  
     if ($_SESSION['langkah']==2) {
+      $_SESSION['pageSource'] = '';
       ?>
       <div class="clearfix"></div>
       <div class="row">
@@ -240,86 +392,96 @@ if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
             </div>
             <div class="x_content">
               <br />
-              <form id="form-dok-sokongan-baharu" data-parsley-validate class="form-horizontal form-label-left" method="POST" enctype="multipart/form-data" action="newdoc_1.php">
+              <form id="form-dok-sokongan-baharu" data-parsley-validate class="form-horizontal form-label-left" method="POST" enctype="multipart/form-data" action="newdoc_v2.php?s=s2">
                 <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama_dok">Muatnaik Dokumen <span class="required">*</span>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama_dok">Muatnaik Dokumen Berkaitan<span class="required">*</span>
                   </label>
+                  <?php  
+                  $arr = array(1, 2, 3, 4);
+
+                  foreach($arr as $bil_upload) {
+                    // $_SESSION['kod_dok_step2'] = $bil_upload['kod_dok'];
+                    // fnRunAlert("kod_dok = ".$_SESSION['kod_dok_step2']);
+                    ?>
+                    <?php
+                  }
+
+                  ?>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <!-- <input type="file" id="nama_dok" name="nama_dok" value="ujian" accept="application/*, image/*" class="file form-control col-md-7 col-xs-12">
-                    <br><p style="font-size: 5px;">&nbsp;</p> -->
-                    <!-- <input type="file" id="nama_dok_01" name="nama_dok_01" value="ujian" accept="application/*, image/*" class="file form-control col-md-7 col-xs-12"> -->
-                    <!-- <br><p style="font-size: 5px;">&nbsp;</p> -->
-                    <!-- <input type="file" id="nama_dok_02" name="nama_dok_02" value="ujian" accept="application/*, image/*" class="file form-control col-md-7 col-xs-12"> -->
-                    <!-- <br><p style="font-size: 5px;">&nbsp;</p> -->
-                    <!-- <input type="file" id="nama_dok_03" name="nama_dok_03" value="ujian" accept="application/*, image/*" class="file form-control col-md-7 col-xs-12"> -->
-                    <!-- <br><p style="font-size: 1px;">&nbsp;</p> -->
-                    <!-- <button type="button" class="btn btn-warning" title="Tambah Dokumen">+</button> -->
                     <div class="control-group" id="fields">
                       <div class="controls">
                         <div class="entry input-group col-xs-3">
-                          <input class="btn btn-primary" name="fields[]" title="fields[]" type="file">
+                          <input class="btn btn-default" name="" title="<?= $arr; ?>" type="file">
                           <span class="input-group-btn">
-                            <button class="btn btn-warning btn-add" type="button">
+                            <button hidden class="btn btn-success btn-add" type="button">
                               <span class="glyphicon glyphicon-plus"></span>
                             </button>
                           </span>
                         </div>
-
                       </div>
-
                     </div>
                   </div>
                 </div>
-                <!-- <div class="form-group">
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="control-group" id="fields">
-                      <div class="controls">
-                        <div class="entry input-group col-xs-3">
-                          <input class="btn btn-primary" name="fields[]" type="file">
-                          <span class="input-group-btn">
-                            <button class="btn btn-success btn-add" type="button">
-                              <span class="glyphicon glyphicon-plus"></span>
-                            </button>
-                          </span>
-                        </div>
-
-                      </div>
-
-                    </div>
-                  </div>
-                </div> -->
-<!-- <div class="col-md-12">
-  <div class="row">
-    <div class="control-group" id="fields">
-      <label class="control-label" for="field1">
-        Nice Multiple Form Fields
-      </label>
-      <div class="controls">
-
-        <div class="entry input-group col-xs-3">
-
-
-          <input class="btn btn-primary" name="fields[]" type="file">
-          <span class="input-group-btn">
-            <button class="btn btn-success btn-add" type="button">
-              <span class="glyphicon glyphicon-plus"></span>
-            </button>
-          </span>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
-</div> -->
                 <div class="ln_solid"></div>
                 <div class="form-group">
                   <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                    <input type="submit" class="btn btn-success" id="btn_simpan_dok_sokongan_baharu" name="btn_simpan_dok_sokongan_baharu" title="Simpan Rekod" value="Muat Naik & Simpan">
-                    <button type="reset" class="btn btn-danger" title="Kosongkan Borang">Batal</button>
+                    <input type="submit" class="btn btn-warning" id="btn_simpan_dok_sokongan_baharu" name="btn_simpan_dok_sokongan_baharu" title="Muat Naik & Muat Naik Lagi" value="Muat Naik & Teruskan">
+                    <button type="reset" class="btn btn-success" title="Selesai Muat Naik & Kembali ke Borang Daftar Dokumen Baharu">Selesai</button>
+                    <button type="reset" class="btn btn-danger" title="Kosongkan Borang">Kosongkan</button>
                   </div>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Jadual untuk senaraikan dokumen sokongan yang telah dimuat naik -->
+      <div class="clearfix"></div>
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>Senarai Dokumen yang Telah Dimuatnaik <small>Untuk Rekod Ini Sahaja</small></h2>
+              <ul class="nav navbar-right panel_toolbox">
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              <br />
+              <table class="table table-striped">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nama Fail</th>
+                    <th scope="col">Tarikh Muat Naik</th>
+                    <th scope="col">Tindakan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Jika tiada untuk disenaraikan -->
+                  <tr class="table table-striped" align="right">
+                    <th scope="row" colspan="4">Tiada dokumen sokongan telah dimuatnaik.</th>
+                  </tr>
+                  <tr class="table table-striped">
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                    <td>@twitter</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -330,6 +492,7 @@ if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
     <!-- /BORANG MUAT NAIK DOKUMEN -->
     <?php
     if ($_SESSION['langkah']==1) {
+      $_SESSION['pageSource'] = '';
       ?>
       <div class="clearfix"></div>
       <div class="row">
@@ -343,7 +506,7 @@ if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
             </div>
             <div class="x_content">
               <br />
-              <form id="form-dok-baharu" data-parsley-validate class="form-horizontal form-label-left" method="POST" enctype="multipart/form-data" action="newdoc_1.php">
+              <form id="form-dok-baharu" data-parsley-validate class="form-horizontal form-label-left" method="POST" enctype="multipart/form-data" action="newdoc_v2.php?s=s1">
                 <?php  
                 fnDropdownKategori($DBServer,$DBUser,$DBPass,$DBName); 
                 ?>
@@ -430,7 +593,7 @@ if (isset($_POST['btn_simpan_dok_baru']) AND !isset($_GET['s'])) {
                   </div>
                 </div>
 
-                <div class="form-group">
+                <div hidden class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama_dok">Muatnaik Dokumen <span class="required">*</span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
