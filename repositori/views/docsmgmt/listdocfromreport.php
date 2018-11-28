@@ -61,14 +61,14 @@ if (isset($_GET['c']) OR isset($_GET['tahun_dok'])) {
 // }
 
 fnClearSessionForListPages();
-$_SESSION['page_title'] = "Pengurusan Rekod Dokumen";
+$_SESSION['page_title'] = "Senarai Rekod Dokumen";
 $_SESSION['addnew_form_title'] = "Borang Tambah Rekod Dokumen";
 $_SESSION['addnew_form_action'] = "Simpan Dokumen Baharu";
 $_SESSION['preview_doc_title'] = "Paparan Rekod Dokumen";
 $_SESSION['preview_doc_action'] = "Perincian Dokumen Sedia Ada";
 $_SESSION['update_form_title'] = "Borang Kemaskini Rekod Dokumen";
 $_SESSION['update_form_action'] = "Kemaskini Dokumen Sedia Ada";
-$_SESSION['table_title'] = "Senarai Rekod Dokumen";
+$_SESSION['table_title'] = "Perincian Statistik";
 /*$_SESSION['table_action'] = "Senaraikan Dokumen";*//*sebelum diubah pada 20180420*/
 $_SESSION['table_action'] = "Di Dalam Repositori";
 $actionfilename = "listdocfromreport.php";
@@ -381,6 +381,9 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
           <div class="x_panel">
             <div class="x_title">
               <h2><?php echo $_SESSION['preview_doc_title']; ?><small><?php echo $_SESSION['preview_doc_action']; ?></small></h2>
+                <button class="btn btn-secondary" onclick="jsfnPrint()"><span class="fa fa-print"></span></button> 
+              <span class="input-group-btn">
+              </span>
               <div class="clearfix"></div>
             </div>
             <div class="x_content">
@@ -471,7 +474,14 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2><?php echo $_SESSION['table_title']; ?> <small><?php echo $_SESSION['table_action']; ?></small></h2>
+            <h2><?php echo $_SESSION['table_title']; ?><small><?php echo $_SESSION['table_action']; ?></small></h2>
+            <div class="clearfix"></div>
+            <span class="input-group-btn">
+              <button class="btn btn-secondary" onclick="jsfnPrint()"><span class="fa fa-print"></span></button> 
+            </span>
+            <div class="col-md-12 text-center">
+              <button onclick="goBack()" class="btn btn-default">Kembali <i class='fa fa-backward'></i></button>
+            </div>
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
@@ -513,6 +523,9 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
               </tbody>
             </table>
             </form>
+            <span class="input-group-btn">
+              <button class="btn btn-secondary" onclick="jsfnPrint()"><span class="fa fa-print"></span></button> 
+            </span>
             <div class="col-md-12 text-center">
               <ul class="pagination pagination-md pager" id="myPager"></ul>
             </div>
@@ -525,6 +538,11 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
     </div>
     <br>&nbsp;<br>&nbsp;<br>&nbsp;
     <!-- Habis borang dummy baharu -->
+    <script>
+      function jsfnPrint() {
+        window.print();
+      }
+    </script>
     <script src="../vendors/jquery/dist/jquery.min.js"></script>
     <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../engine/bootstrap.tablesorter.js"></script>
