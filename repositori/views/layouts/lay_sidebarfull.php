@@ -43,8 +43,12 @@
                       ?>
                       <li><a><i class="fa fa-book"></i> Dokumen <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                          <li><a href="../docsmgmt/newdoc.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen</a></li><!-- s=n (source=new) -->
-                          <li><a href="../docsmgmt/newdoc_v2.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen Baharu</a></li><!-- s=n (source=new) -->
+                          <?php  
+                          /*
+                          <li><a href="../docsmgmt/newdoc.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen Lama</a></li><!-- s=n (source=new) -->
+                          */
+                          ?>
+                          <li><a href="../docsmgmt/newdoc_v2.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen</a></li><!-- s=n (source=new) -->
                           <!-- <li><a href="../docsmgmt/listdoc.php?s=n"><i class="fa fa-table"></i>Senarai Dokumen Alt</a></li> -->
                           <!-- <li><a href="../docsmgmt/listdoc_o.php?s=n"><i class="fa fa-table"></i>Senarai Dokumen Asal</a></li> -->
                           <li><a href="../docsmgmt/searchdoc.php"><i class="fa fa-search"></i>Carian Dokumen</a></li>
