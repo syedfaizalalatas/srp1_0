@@ -7,17 +7,18 @@ n = new
 s1 = step 1
 s2 = step 2
 */
-fnRunAlert("source = ".$_GET['s']);
+// ("source = ".$_GET['s']);
 if ($_GET['s'] != 's1' AND $_GET['s'] != 's2') {
   fnResetSessionsForPages();
 }
 
 if ($_SESSION['pageSource'] == 'new') {
   $_GET['s'] = 'n';
+  $_SESSION['kod_kat_step2'] = '';
 }
 
-fnRunAlert("source = ".$_GET['s']);
-fnRunAlert("pageSource = ".$_SESSION['pageSource']);
+// fnRunAlert("source = ".$_GET['s']);
+// fnRunAlert("pageSource = ".$_SESSION['pageSource']);
 
 # clear session from other forms newuser, updateuser, updatedoc
 if (isset($_GET['s']) == 'n') {
@@ -30,7 +31,35 @@ if (isset($_GET['s']) == 'n') {
   fnClearSessionListDoc();
 }
 
-// when 'btn_simpan_dok_baru' is pressed/clicked
+function fnGetDocCodeUsingAvailableInfo(){
+  $DBServer       = $_SESSION['DBServer'];
+  $DBUser         = $_SESSION['DBUser'];
+  $DBPass         = $_SESSION['DBPass'];
+  $DBName         = $_SESSION['DBName'];
+  $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+
+  // check connection
+  if ($conn->connect_error) {
+      trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+  }
+
+  $sql="SELECT kod_dok FROM dokumen WHERE kod_kat = ".$_SESSION['kod_kat_step2']." AND bil_dok = ".$_SESSION['bil_dok_step2']." AND tahun_dok = ".$_SESSION['tahun_dok_step2'];
+
+  $rs=$conn->query($sql);
+
+  if($rs === false) {
+      trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+  } else {
+      $arr = $rs->fetch_all(MYSQLI_ASSOC);
+  }
+  foreach($arr as $row) {
+    $_SESSION['kod_dok_step2'] = $row['kod_dok'];
+    // fnRunAlert("kod_dok = ".$_SESSION['kod_dok_step2']);
+  }
+}
+
+
+// when 'btn_simpan_dok_baru' is pressed/clicked (the form)
 if (isset($_POST['btn_simpan_dok_baru']) AND $_GET['s']=='s1') {
   fnClearSessionNewDoc();
   $_SESSION['tajuk_dok'] = $_POST['tajuk_dokumen'];
@@ -220,6 +249,7 @@ if (isset($_POST['btn_simpan_dok_baru']) AND $_GET['s']=='s1') {
       if ($_SESSION['insertOK'] == 1) {
         fnRunAlert("Rekod BERJAYA disimpan.");
         $_SESSION['langkah'] = 2;
+        fnGetDocCodeUsingAvailableInfo();
         // fnClearNewDocForm();
         fnClearSessionNewDoc();
       }
@@ -236,7 +266,7 @@ if (isset($_POST['btn_simpan_dok_baru']) AND $_GET['s']=='s1') {
 }
 
 // when 'btn_simpan_dok_sokongan_baharu' is pressed/clicked
-if (isset($_POST['btn_simpan_dok_sokongan_baharu']) AND $_GET['s']=='s2') {
+if ((isset($_POST['btn_simpan_dok_sokongan_baharu']) OR isset($_POST['btn_simpan_dok_sokongan_baharu_akhir'])) AND $_GET['s']=='s2') {
   fnClearSessionNewDoc();
   # dapatkan kategori dok yang telah disimpan
   $_SESSION['kod_kat_step2'];
@@ -245,44 +275,8 @@ if (isset($_POST['btn_simpan_dok_sokongan_baharu']) AND $_GET['s']=='s2') {
   # dapatkan tahun dok yang telah disimpan
   $_SESSION['tahun_dok_step2'];
   # dapatkan  kod_dok menggunakan maklumat 3 medan di atas
-/*
-Fatal error: Uncaught Error: Call to undefined function fnGetDocCodeUsingAvailableInfo() in C:\WinNMP\WWW\srp1_0_uploading_upgrade\srp1_0\repositori\views\docsmgmt\newdoc_v2.php:248 Stack trace: #0 {main} thrown in C:\WinNMP\WWW\srp1_0_uploading_upgrade\srp1_0\repositori\views\docsmgmt\newdoc_v2.php on line 248
-*/
 
-
-  function fnGetDocCodeUsingAvailableInfo(){
-    $DBServer       = $_SESSION['DBServer'];
-    $DBUser         = $_SESSION['DBUser'];
-    $DBPass         = $_SESSION['DBPass'];
-    $DBName         = $_SESSION['DBName'];
-    $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
-
-    // check connection
-    if ($conn->connect_error) {
-        trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
-    }
-
-    $sql="SELECT kod_dok FROM dokumen WHERE kod_kat = ".$_SESSION['kod_kat_step2']." AND bil_dok = ".$_SESSION['bil_dok_step2']." AND tahun_dok = ".$_SESSION['tahun_dok_step2'];
-
-    $rs=$conn->query($sql);
-
-    if($rs === false) {
-        trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
-    } else {
-        $arr = $rs->fetch_all(MYSQLI_ASSOC);
-    }
-    foreach($arr as $row) {
-      $_SESSION['kod_dok_step2'] = $row['kod_dok'];
-      fnRunAlert("kod_dok = ".$_SESSION['kod_dok_step2']);
-    }
-
-  }
   fnGetDocCodeUsingAvailableInfo();
-/*
-Fatal error: Wrong SQL: SELECT kod_dok FROM dokumen WHERE kod_kat = $_SESSION[kod_kat_step2] AND bil_dok = $_SESSION[bil_dok_step2] AND tahun_dok = $_SESSION[tahun_dok_step2] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '[kod_kat_step2] AND bil_dok = $_SESSION[bil_dok_step2] AND tahun_dok = $_SESSION' at line 1 in C:\WinNMP\WWW\srp1_0_uploading_upgrade\srp1_0\repositori\views\docsmgmt\newdoc_v2.php on line 270
-*/
-
-
 
   $_SESSION['tarikh_kemaskini'] = date("Y-m-d");
   $_SESSION['tarikh_kemaskini'] = checkAndRevalue($_SESSION['tarikh_kemaskini']);
@@ -317,12 +311,12 @@ Fatal error: Wrong SQL: SELECT kod_dok FROM dokumen WHERE kod_kat = $_SESSION[ko
     if ($_SESSION['verifiedOK'] == 1) {
       # semak jika fail yang hendak dimuat naik telah dipilih
       # Kira bilangan fail yang hendak dimuatnaik dan pastikan minimum 1 fail.
-      // fnPreUploadFilesRename(); # yang ni skip dulu... terus bagi $_SESSION['touploadOK'] = 1
-      $_SESSION['slot01_OK'] = 0;
+      fnPreUploadFilesRename_v2(); # yang ni skip dulu... terus bagi $_SESSION['touploadOK'] = 1
+      // $_SESSION['slot01_OK'] = 0;
       $_SESSION['slot02_OK'] = 0;
       $_SESSION['slot03_OK'] = 0;
       $_SESSION['slot04_OK'] = 0;
-      $_SESSION['touploadOK'] = 1;
+      // $_SESSION['touploadOK'] = 1;
     }
     # if file is uploaded, save record
 
@@ -330,39 +324,46 @@ Fatal error: Wrong SQL: SELECT kod_dok FROM dokumen WHERE kod_kat = $_SESSION[ko
       # baru boleh upload file
       $_SESSION['uploadOk'] = 0; // Assign initial value to 'uploadOk'
       if ($_SESSION['slot01_OK'] == 1) {
-        fnUploadFilesRename("nama_dok"); // the altered original version (the working one! 20161018)
+        fnUploadFilesRename_v2("nama_dok"); // the altered original version (the working one! 20161018)
         // fnRunAlert("Dah upload slot01");
       }
       if ($_SESSION['slot02_OK'] == 1) {
-        fnUploadFilesRename("nama_dok_01");
+        fnUploadFilesRename_v2("nama_dok_01");
         // fnRunAlert("Dah upload slot02");
       }
       if ($_SESSION['slot03_OK'] == 1) {
-        fnUploadFilesRename("nama_dok_02");
+        fnUploadFilesRename_v2("nama_dok_02");
         // fnRunAlert("Dah upload slot03");
       }
       if ($_SESSION['slot04_OK'] == 1) {
-        fnUploadFilesRename("nama_dok_03");
+        fnUploadFilesRename_v2("nama_dok_03");
         // fnRunAlert("Dah upload slot04");
       }
-      fnInsertCheckedTeras($DBServer,$DBUser,$DBPass,$DBName);
-      fnInsertNewDoc_v2($DBServer,$DBUser,$DBPass,$DBName);
-      if ($_SESSION['insertOK'] == 1) {
-        fnRunAlert("Rekod BERJAYA disimpan.");
-        $_SESSION['langkah'] = 2;
-        // fnClearNewDocForm();
+      // fnInsertCheckedTeras($DBServer,$DBUser,$DBPass,$DBName);
+      fnInsertNewSupportDoc_v2($DBServer,$DBUser,$DBPass,$DBName);
+      if ($_SESSION['slot01_OK'] == 1) {
+        fnRunAlert("Rekod BERJAYA dikemaskini.");
+        if (isset($_POST['btn_simpan_dok_sokongan_baharu_akhir'])) {
+          $_SESSION['langkah'] = 1;
+        } else {
+          $_SESSION['langkah'] = 2;
+        }
         fnClearSessionNewDoc();
       }
       else {
-        fnRunAlert("Rekod GAGAL disimpan.");
+        fnRunAlert("Rekod TIDAK dikemaskini.");
       }
       # kosongkan sessions
     }
     # jika fail tidak dapat dimuatnaik, input akan dipaparkan semula
     elseif (!isset($_SESSION['touploadOK']) OR $_SESSION['touploadOK'] == 0 OR $_SESSION['verifiedOK'] == 0) {
-      fnRunAlert("Rekod TIDAK disimpan.");
+      fnRunAlert("Rekod TIDAK dikemaskini.");
     }
   }
+}
+
+if (isset($_POST['btn_selesai_muatnaik'])) {
+  $_SESSION['langkah'] = 1;
 }
 
 // $_SESSION['langkah'] = 1;
@@ -411,7 +412,7 @@ Fatal error: Wrong SQL: SELECT kod_dok FROM dokumen WHERE kod_kat = $_SESSION[ko
                     <div class="control-group" id="fields">
                       <div class="controls">
                         <div class="entry input-group col-xs-3">
-                          <input class="btn btn-default" name="" title="<?= $arr; ?>" type="file">
+                          <input class="btn btn-default" id="nama_dok" name="nama_dok" title="Sila pilih dokumen untuk dimuat naik" type="file" accept="application/*, image/*">
                           <span class="input-group-btn">
                             <button hidden class="btn btn-success btn-add" type="button">
                               <span class="glyphicon glyphicon-plus"></span>
@@ -424,10 +425,11 @@ Fatal error: Wrong SQL: SELECT kod_dok FROM dokumen WHERE kod_kat = $_SESSION[ko
                 </div>
                 <div class="ln_solid"></div>
                 <div class="form-group">
-                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                    <input type="submit" class="btn btn-warning" id="btn_simpan_dok_sokongan_baharu" name="btn_simpan_dok_sokongan_baharu" title="Muat Naik & Muat Naik Lagi" value="Muat Naik & Teruskan">
-                    <button type="reset" class="btn btn-success" title="Selesai Muat Naik & Kembali ke Borang Daftar Dokumen Baharu">Selesai</button>
-                    <button type="reset" class="btn btn-danger" title="Kosongkan Borang">Kosongkan</button>
+                  <div class="col-md-8 col-sm-8 col-xs-12 col-md-offset-2">
+                    <input type="submit" class="btn btn-success" id="btn_simpan_dok_sokongan_baharu" name="btn_simpan_dok_sokongan_baharu" title="Muat Naik & Muat Naik Lagi" value="Muat Naik & Teruskan">
+                    <input type="submit" class="btn btn-warning" id="btn_simpan_dok_sokongan_baharu" name="btn_simpan_dok_sokongan_baharu_akhir" title="Muat Naik & Selesai" value="Muat Naik & Selesai">
+                    <input type="submit" class="btn btn-danger" id="btn_simpan_dok_sokongan_baharu" name="btn_selesai_muatnaik" title="Selesai Muat Naik & Kembali ke Borang Daftar Dokumen Baharu" value="Keluar">
+                    <button type="reset" class="btn btn-secondary" title="Kosongkan Borang">Kosongkan</button>
                   </div>
                 </div>
               </form>
@@ -452,34 +454,82 @@ Fatal error: Wrong SQL: SELECT kod_dok FROM dokumen WHERE kod_kat = $_SESSION[ko
                 <thead class="thead-light">
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Nama Fail</th>
-                    <th scope="col">Tarikh Muat Naik</th>
+                    <th scope="col">Nama Fail Asal</th>
+                    <th scope="col">Nama Fail Disimpan</th>
                     <th scope="col">Tindakan</th>
                   </tr>
                 </thead>
                 <tbody>
                   <!-- Jika tiada untuk disenaraikan -->
-                  <tr class="table table-striped" align="right">
-                    <th scope="row" colspan="4">Tiada dokumen sokongan telah dimuatnaik.</th>
-                  </tr>
-                  <tr class="table table-striped">
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
+                  <?php  
+                  function fnListSupportingDocsForThisRecord(){
+                      $DBServer       = $_SESSION['DBServer'];
+                      $DBUser         = $_SESSION['DBUser'];
+                      $DBPass         = $_SESSION['DBPass'];
+                      $DBName         = $_SESSION['DBName'];
+
+                      $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+
+                      // check connection
+                      if ($conn->connect_error) {
+                          trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+                      }
+
+                      $sql='SELECT * FROM dok_sokongan WHERE kod_dok_fk='.$_SESSION['kod_dok_step2'];
+
+                      $rs=$conn->query($sql);
+
+                      if($rs === false) {
+                          trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+                      } else {
+                          $rows_returned = $rs->num_rows;
+                      }
+
+                      if ($rows_returned > 0) {
+                        # code...
+                        $rs=$conn->query($sql);
+
+                        if($rs === false) {
+                            trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+                        } else {
+                            $arr = $rs->fetch_all(MYSQLI_ASSOC);
+                        }
+
+                        $table_number = 1;
+                        foreach($arr as $row) {
+                          $target_dir = "../papers/";
+                          $target_file = "$target_dir" . $row['nama_dok_disimpan'];
+                          if (file_exists($target_file)) {
+                            // fnRunAlert("File ni ada dlm folder.".$target_file);
+                            ?>
+                            <tr class="table table-striped">
+                              <th scope="row"><?= $table_number; ?></th>
+                              <td><?= $row['nama_dok_asal'] ?></td>
+                              <td><?= $row['nama_dok_disimpan'] ?></td>
+                              <td>
+                                <button class="btn btn-danger"><span class="fa fa-trash"></span></button>
+                              </td>
+                            </tr>
+                            <?php
+                            $table_number++;  
+                          }
+                        }
+                      }
+                      else {
+                        ?>
+                        <tr class="table table-striped" align="right">
+                          <th scope="row" colspan="4">Tiada dokumen sokongan telah dimuatnaik.</th>
+                        </tr>
+                        <?php
+                      }
+                      // echo $rows_returned; // uncomment for debugging only
+                      // echo $arr['kod_dok']; // uncomment for debugging only
+
+
+                      $conn->close();
+                  }
+                  fnListSupportingDocsForThisRecord();
+                  ?>
                 </tbody>
               </table>
             </div>
