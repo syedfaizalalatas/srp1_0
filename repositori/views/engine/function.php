@@ -143,10 +143,10 @@ function fnPBKDF2($algorithm, $password, $salt, $count, $key_length, $raw_output
 # this function will generate a dropdown list of kementerian 
 # used in newdoc.php, newuser.php, listuser.php, listdoc.php
 function fnDropdownKem($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -202,10 +202,10 @@ function fnDropdownKem($a,$b,$c,$d){
 }
 
 function fnDropdownKemForAgencyMgmt($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -261,10 +261,10 @@ function fnDropdownKemForAgencyMgmt($a,$b,$c,$d){
 }
 
 function fnDropdownKemForView($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -326,10 +326,10 @@ function fnDropdownKemForView($a,$b,$c,$d){
 # this function will generate a dropdown list of kategori dokumen 
 # used in newdoc.php, listdoc.php
 function fnDropdownKategoriForView($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -499,10 +499,10 @@ function fnDropdownKategoriForSearch($a,$b,$c,$d){
 }
 
 function fnDropdownGelaranNama($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -555,10 +555,10 @@ function fnDropdownGelaranNama($a,$b,$c,$d){
 }
 
 function fnDropdownSektor($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -611,10 +611,10 @@ function fnDropdownSektor($a,$b,$c,$d){
 }
 
 function fnDropdownSektorForSearch($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -667,10 +667,10 @@ function fnDropdownSektorForSearch($a,$b,$c,$d){
 }
 
 function fnDropdownSektorForView($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -727,10 +727,10 @@ function fnDropdownSektorForView($a,$b,$c,$d){
 }
 
 function fnDropdownBahagian($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -783,10 +783,10 @@ function fnDropdownBahagian($a,$b,$c,$d){
 }
 
 function fnDropdownBahagianForSearch($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -839,10 +839,10 @@ function fnDropdownBahagianForSearch($a,$b,$c,$d){
 }
 
 function fnDropdownBahagianForView($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -1150,10 +1150,10 @@ function fnDropdownJabStatSerahForView($a,$b,$c,$d,$e,$f){
 }
 
 function fnDropdownJabForDivisionMgmt($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -1209,10 +1209,10 @@ function fnDropdownJabForDivisionMgmt($a,$b,$c,$d){
 }
 
 function fnDropdownStatusDok($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -1265,10 +1265,10 @@ function fnDropdownStatusDok($a,$b,$c,$d){
 }
 
 function fnDropdownStatusDokForSearch($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -1321,10 +1321,10 @@ function fnDropdownStatusDokForSearch($a,$b,$c,$d){
 }
 
 function fnDropdownStatusDokForView($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -1421,10 +1421,10 @@ function fnSetTarikhStatusDoc(){
 }
 
 function fnCountTerasStrategik($a,$b,$c,$d){
-    $DBServer = $a;
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -1449,10 +1449,10 @@ function fnCountTerasStrategik($a,$b,$c,$d){
 }
 
 function fnCheckboxTeras($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -1529,10 +1529,10 @@ function fnCheckboxTeras($a,$b,$c,$d){
 }
 
 function fnCheckboxTerasForUpdate($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -1621,10 +1621,10 @@ function fnCheckboxTerasForUpdate($a,$b,$c,$d){
 }
 
 function fnCheckboxTerasForView($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -1713,10 +1713,10 @@ function fnCheckboxTerasForView($a,$b,$c,$d){
 }
 
 function fnGetTerasDocForUpdateForm($a,$b,$c,$d){
-    $DBServer = $a;
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     # get doc id 
     $kod_dok_to_be_updated = $_SESSION['kod_dok_to_be_updated'];
     // fnRunAlert("$kod_dok_to_be_updated");
@@ -1794,10 +1794,10 @@ function fnClearTerasDokSessionForUpdateForm(){
 }
 
 function fnCountCheckedTeras($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -1865,10 +1865,10 @@ function fnCountCheckedTeras($a,$b,$c,$d){
 }
 
 function fnInsertCheckedTeras($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -1990,10 +1990,10 @@ function fnInsertCheckedTeras($a,$b,$c,$d){
 }
 
 function fnUpdateCheckedTeras($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -2064,10 +2064,10 @@ function fnUpdateCheckedTeras($a,$b,$c,$d){
 }
 
 function fnInsertNewUser($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -2096,10 +2096,10 @@ function fnInsertNewUser($a,$b,$c,$d){
 }
 
 function fnUpdateUser($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -2153,10 +2153,10 @@ function fnCompareNewPasswords(){
 }
 
 function fnUpdateDoc($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -2258,10 +2258,10 @@ function fnUpdateDoc($a,$b,$c,$d){
 }
 
 function fnInsertNewDoc($a,$b,$c,$d){
-    $DBServer = $a;
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -2334,10 +2334,10 @@ function fnInsertNewDoc($a,$b,$c,$d){
 }
 
 function fnInsertNewDoc_v2($a,$b,$c,$d){
-    $DBServer = $a;
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -2380,7 +2380,7 @@ function fnInsertNewDoc_v2($a,$b,$c,$d){
         $_SESSION['insertOK'] = 1; # tanda rekod berjaya dimasukkan dalam table dokumen
         if ($_SESSION['slot01_OK'] == 1) {
             // fnRunAlert("Ni baru mula if slot01.");
-            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot01 berjaya direkod ke db.";
+            $_SESSION['mesejBerjaya'] = "Dokumen sokongan berjaya direkod ke db.";
             fnInsertDokSokongan($_SESSION['nama_dok_asal_slot01'], $_SESSION['nama_dok_disimpan_slot01']);
             // fnInsertDokSokongan("$_SESSION[nama_dok_asal_slot01]", "$_SESSION[nama_dok_disimpan_slot01]");
             // fnRunAlert("Ni selepas insert dok sokongan slot01.");
@@ -2404,6 +2404,59 @@ function fnInsertNewDoc_v2($a,$b,$c,$d){
     }
 
     $stmt->close();
+
+    $conn->close();
+    fnClearSessionNewDoc();
+}
+
+function fnInsertNewSupportDoc_v2($a,$b,$c,$d){
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
+
+    $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+
+    // check connection
+    if ($conn->connect_error) {
+        trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+    }
+
+    $tanda_hapus = 1;
+    
+    /* Execute statement */
+    // $stmt->execute();
+    # 20170126 trying this
+    // fnRunAlert("Ni sebelum insert dok sokongan.");
+    if ($_SESSION['insertOK'] == 1) {
+        // fnRunAlert("Ni selepas execute stmt.");
+        // $_SESSION['insertOK'] = 1; # tanda rekod berjaya dimasukkan dalam table dokumen
+        if ($_SESSION['slot01_OK'] == 1) {
+            // fnRunAlert("Ni baru mula if slot01.");
+            $_SESSION['mesejBerjaya'] = "Dokumen sokongan berjaya direkod ke db.";
+            fnInsertDokSokongan($_SESSION['nama_dok_asal_slot01'], $_SESSION['nama_dok_disimpan_slot01']);
+            // fnInsertDokSokongan("$_SESSION[nama_dok_asal_slot01]", "$_SESSION[nama_dok_disimpan_slot01]");
+            // fnRunAlert("Ni selepas insert dok sokongan slot01.");
+        }
+        if ($_SESSION['slot02_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot02 berjaya direkod ke db.";
+            fnInsertDokSokongan($_SESSION['nama_dok_asal_slot02'], $_SESSION['nama_dok_disimpan_slot02']);
+        }
+        if ($_SESSION['slot03_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot03 berjaya direkod ke db.";
+            fnInsertDokSokongan($_SESSION['nama_dok_asal_slot03'], $_SESSION['nama_dok_disimpan_slot03']);
+        }
+        if ($_SESSION['slot04_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot04 berjaya direkod ke db.";
+            fnInsertDokSokongan($_SESSION['nama_dok_asal_slot04'], $_SESSION['nama_dok_disimpan_slot04']);
+        }
+        $_SESSION['mesejBerjaya'] = ""; #kosongkan mesej berjaya
+    }
+    else {
+        $_SESSION['insertOK'] = 0;
+    }
+
+    // $stmt->close();
 
     $conn->close();
     fnClearSessionNewDoc();
@@ -2594,10 +2647,10 @@ function fnClearNewDocForm(){
 
 # check saved agency codes for duplicates
 function fnCheckSavedDivisionCodeToAdd($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -2634,10 +2687,10 @@ function fnCheckSavedDivisionCodeToAdd($a,$b,$c,$d){
 
 # check saved agency names for duplicates
 function fnCheckSavedDivisionNameToAdd($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -2676,10 +2729,10 @@ function fnCheckSavedDivisionNameToAdd($a,$b,$c,$d){
 
 # check saved agency codes for duplicates
 function fnCheckSavedAgencyCodeToAdd($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -2716,10 +2769,10 @@ function fnCheckSavedAgencyCodeToAdd($a,$b,$c,$d){
 
 # check saved agency names for duplicates
 function fnCheckSavedAgencyNameToAdd($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -2756,10 +2809,10 @@ function fnCheckSavedAgencyNameToAdd($a,$b,$c,$d){
 
 # check saved docs for duplicates
 function fnCheckSavedDoc($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -2813,10 +2866,10 @@ function fnCheckSavedDoc($a,$b,$c,$d){
 
 # check saved docs for duplicates
 function fnCheckSavedDocToUpdate($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -3522,6 +3575,175 @@ function fnUploadFilesRename($nama_dok){
     }
 }
 
+function fnUploadFilesRename_v2($nama_dok){
+    /* Getting file info and separating the name */
+    $filename = $_FILES[$nama_dok]["name"];
+    $file_basename = substr($filename, 0, strripos($filename, '.')); // get file name
+    $file_ext = substr($filename, strripos($filename, '.')); // get file extension
+
+    /* Find biggest doc id/code */
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
+    fnFindBiggestDocID($DBServer,$DBUser,$DBPass,$DBName);
+
+    /* File name marker */
+    if ($nama_dok == "nama_dok") {
+        $filename_marker = "a";
+    }
+    elseif ($nama_dok == "nama_dok_01") {
+        $filename_marker = "b";
+    }
+    elseif ($nama_dok == "nama_dok_02") {
+        $filename_marker = "c";
+    }
+    else {
+        $filename_marker = "d";
+    }
+
+    /* Get original filename */
+    $full_file_name = basename($_FILES[$nama_dok]["name"]);
+    // fnRunAlert("Full file name = ".$full_file_name);
+    $file_name_extension = end((explode(".", $full_file_name))); # extra () to prevent notice
+    $file_name_only = basename($_FILES[$nama_dok]["name"], ".".$file_name_extension);
+    // fnRunAlert("File name with no extension = ".$file_name_only);
+    $_SESSION['nama_fail_asal'] = basename($_FILES[$nama_dok]["name"]);
+    $_SESSION['nama_fail_asal_untuk_nama_baharu'] = $file_name_only;
+
+    /* Create new name for file */
+    $new_id=$_SESSION['kod_dok_step2']; // add quote mark for 1. removed quote mark 20161013 1720.
+    $_SESSION['new_doc_id'] = $new_id;
+    // $new_base_name = "srp_doc".$new_id; // removed .'_' 20161013 1713
+    $new_base_name = $new_id."_".$_SESSION['nama_fail_asal_untuk_nama_baharu']; 
+
+    /* Rename file */
+    $new_full_file_name = "$new_base_name"."$file_ext"; // added quote marks 20161013 1722.
+    $_SESSION['nama_fail_disimpan'] = "$new_full_file_name"; // added this line 20161013 1716.
+    // echo $_SESSION['nama_fail_disimpan'];
+
+    /* Setting the target directory */
+    $target_dir = "../papers/";
+    /* File names to be saved for each slot */
+    if ($nama_dok == "nama_dok") {
+        $_SESSION['nama_dok_asal_slot01'] = $_SESSION['nama_fail_asal'];
+        $_SESSION['nama_dok_disimpan_slot01'] = $_SESSION['nama_fail_disimpan'];
+    }
+    elseif ($nama_dok == "nama_dok_01") {
+        $_SESSION['nama_dok_asal_slot02'] = $_SESSION['nama_fail_asal'];
+        $_SESSION['nama_dok_disimpan_slot02'] = $_SESSION['nama_fail_disimpan'];
+    }
+    elseif ($nama_dok == "nama_dok_02") {
+        $_SESSION['nama_dok_asal_slot03'] = $_SESSION['nama_fail_asal'];
+        $_SESSION['nama_dok_disimpan_slot03'] = $_SESSION['nama_fail_disimpan'];
+    }
+    else {
+        $_SESSION['nama_dok_asal_slot04'] = $_SESSION['nama_fail_asal'];
+        $_SESSION['nama_dok_disimpan_slot04'] = $_SESSION['nama_fail_disimpan'];
+    }
+    # bila nak padam session ni semua?
+    $target_file = "$target_dir" . "$new_full_file_name"; // add quotation marks 20161013 1546. changed full_file_name to new_full_file_name 20161013 1701. removed full_file_name, new_base_name & added new_full_file_name 20161013 1713
+    $uploadOk = 1;
+    $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+    # Check if image file is a actual image or fake image
+    if(isset($_POST["submit"])) {
+        $check = getimagesize($_FILES[$nama_dok]["tmp_name"]);
+        if($check !== false) {
+            ?>
+            <script>
+                alert("<?php echo "Fail imej - " . $check["mime"] . "."; ?>");
+            </script>
+            <?php
+            $uploadOk = 0; // changed 1 to 0 20161013 1731
+            $_SESSION['uploadOk'] = 0;
+        } else {
+            ?>
+            <script>
+                alert("<?php echo "Fail bukan imej."; ?>");
+            </script>
+            <?php
+            $uploadOk = 1; // changed 0 to 1 20161013 1731
+            $_SESSION['uploadOk'] = 1;
+        }
+    }
+    // Check if file already exists
+    if (file_exists($target_file)) {
+        fnRunAlert("Maaf, fail telah wujud.");
+        if ($nama_dok == "nama_dok") {
+            $_SESSION['slot01_OK'] = 0;
+        }
+        elseif ($nama_dok == "nama_dok_01") {
+            $_SESSION['slot02_OK'] = 0;
+        }
+        elseif ($nama_dok == "nama_dok_02") {
+            $_SESSION['slot03_OK'] = 0;
+        }
+        else {
+            $_SESSION['slot04_OK'] = 0;
+        }
+        $uploadOk = 0;
+        $_SESSION['uploadOk'] = 0;
+    }
+
+    # Check file size
+    if ($_FILES[$nama_dok]["size"] > 50000000) {
+        ?>
+        <script>
+            alert("<?php echo "Maaf, fail anda melebihi 50MB."; ?>");
+        </script>
+        <?php
+        $uploadOk = 0;
+        $_SESSION['uploadOk'] = 0;
+    }
+    # Allow certain file formats
+    if($imageFileType != "png" && $imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "tif" && $imageFileType != "gif" && $imageFileType != "pdf" && $imageFileType != "doc" && $imageFileType != "docx" && $imageFileType != "zip" ) {
+        ?>
+        <script>
+            alert("<?php echo "Maaf, cuma fail PNG, JPG, JPEG, TIF, GIF, PDF, DOC, DOCX atau ZIP sahaja yang dibenarkan."; ?>");
+        </script>
+        <?php
+        $uploadOk = 0;
+        $_SESSION['uploadOk'] = 0;
+    }
+    # Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+        ?>
+        <script>
+            alert("<?php echo "Maaf, fail anda tidak dimuatnaik."; ?>");
+        </script>
+        <?php
+        $uploadOk = 0;
+        $_SESSION['uploadOk'] = 0;
+    } 
+    # if everything is ok, try to upload file
+    else {
+        if (move_uploaded_file($_FILES[$nama_dok]["tmp_name"], "$target_file")) { // add quote marks for target_file 20161013 1550
+            ?>
+            <script>
+                alert("<?php echo "Fail ".basename($_FILES[$nama_dok]["name"])." telah dimuatnaik sebagai ".$new_full_file_name."."; ?>");
+            </script>
+            <?php
+            $uploadOk = 1;
+            $_SESSION['uploadOk'] = 1;
+        } 
+        else {
+            ?>
+            <script>
+                alert("<?php echo "Maaf, terdapat kesilapan memuatnaik fail anda."; ?>");
+            </script>
+            <?php
+            $uploadOk = 0;
+            $_SESSION['uploadOk'] = 0;
+        }
+    }
+    if ($uploadOk == 0) {
+        $_SESSION['uploadOk'] = 0;
+    }
+    elseif ($uploadOk == 1) {
+        $_SESSION['uploadOk'] = 1;
+    }
+}
+
 function fnUploadFilesRename_bak20180723(){
     /* Getting file info and separating the name */
     $filename = $_FILES["nama_dok"]["name"];
@@ -3643,6 +3865,115 @@ function fnUploadFilesRename_bak20180723(){
 }
 
 function fnPreUploadFilesRename(){
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
+
+    # reset semua kpd 0
+    $_SESSION['slot01_OK'] = 0;
+    $_SESSION['slot02_OK'] = 0;
+    $_SESSION['slot03_OK'] = 0;
+    $_SESSION['slot04_OK'] = 0;
+    $bilDokSokUtkMuatNaik = 0;
+
+    if (isset($_FILES["nama_dok"]["name"]) or isset($_FILES['nama_dok']['tmp_name'])) {
+        /* Getting file info and separating the name */
+        $filename = $_FILES["nama_dok"]["name"];
+        $file_basename = substr($filename, 0, strripos($filename, '.')); // get file name
+        $file_ext = substr($filename, strripos($filename, '.')); // get file extension
+
+
+        # Checking if file has been selected for upload
+        // if(!file_exists($_FILES['nama_dok']['tmp_name']["0"])) { // this causes error
+        if(!file_exists($_FILES['nama_dok']['tmp_name'])) {
+            // fnRunAlert("Slot 1: Tiada fail yang dipilih untuk dimuat naik.");
+            // $_SESSION['touploadOK'] = 0;
+        }
+        else {
+            // $_SESSION['touploadOK'] = 1;
+            $bilDokSokUtkMuatNaik = $bilDokSokUtkMuatNaik + 1;
+            $_SESSION['slot01_OK'] = 1;
+        }
+    }
+    else {
+        // fnRunAlert("Slot 1: Tiada fail dipilih untuk muat naik.");
+    }
+
+    # slot 2
+    if (isset($_FILES["nama_dok_01"]["name"]) or isset($_FILES['nama_dok_01']['tmp_name'])) {
+        /* Getting file info and separating the name */
+        $filename = $_FILES["nama_dok_01"]["name"];
+        $file_basename = substr($filename, 0, strripos($filename, '.')); // get file name
+        $file_ext = substr($filename, strripos($filename, '.')); // get file extension
+
+
+        # Checking if file has been selected for upload
+        if(!file_exists($_FILES['nama_dok_01']['tmp_name'])) {
+            // fnRunAlert("Slot 2: Tiada fail yang dipilih untuk dimuat naik.");
+        }
+        else {
+            $bilDokSokUtkMuatNaik = $bilDokSokUtkMuatNaik + 1;
+            $_SESSION['slot02_OK'] = 1;
+        }
+    }
+    else {
+        // fnRunAlert("Slot 2: Tiada fail dipilih untuk muat naik.");
+    }
+
+    # slot 3
+    if (isset($_FILES["nama_dok_02"]["name"]) or isset($_FILES['nama_dok_02']['tmp_name'])) {
+        /* Getting file info and separating the name */
+        $filename = $_FILES["nama_dok_02"]["name"];
+        $file_basename = substr($filename, 0, strripos($filename, '.')); // get file name
+        $file_ext = substr($filename, strripos($filename, '.')); // get file extension
+
+
+        # Checking if file has been selected for upload
+        if(!file_exists($_FILES['nama_dok_02']['tmp_name'])) {
+            // fnRunAlert("Slot 3: Tiada fail yang dipilih untuk dimuat naik.");
+        }
+        else {
+            $bilDokSokUtkMuatNaik = $bilDokSokUtkMuatNaik + 1;
+            $_SESSION['slot03_OK'] = 1;
+        }
+    }
+    else {
+        // fnRunAlert("Slot 3: Tiada fail dipilih untuk muat naik.");
+    }
+
+     # slot 4
+    if (isset($_FILES["nama_dok_03"]["name"]) or isset($_FILES['nama_dok_03']['tmp_name'])) {
+        /* Getting file info and separating the name */
+        $filename = $_FILES["nama_dok_03"]["name"];
+        $file_basename = substr($filename, 0, strripos($filename, '.')); // get file name
+        $file_ext = substr($filename, strripos($filename, '.')); // get file extension
+
+
+        # Checking if file has been selected for upload
+        if(!file_exists($_FILES['nama_dok_03']['tmp_name'])) {
+            // fnRunAlert("Slot 4: Tiada fail yang dipilih untuk dimuat naik.");
+        }
+        else {
+            $bilDokSokUtkMuatNaik = $bilDokSokUtkMuatNaik + 1;
+            $_SESSION['slot04_OK'] = 1;
+        }
+    }
+    else {
+        // fnRunAlert("Slot 4: Tiada fail dipilih untuk muat naik.");
+    }
+    $_SESSION['bilDokSokUtkMuatNaik'] = $bilDokSokUtkMuatNaik;
+    if ($bilDokSokUtkMuatNaik == 0) {
+        fnRunAlert("Tiada fail dipilih untuk muat naik.");
+        $_SESSION['touploadOK'] = 0;
+    }
+    else {
+        fnRunAlert($bilDokSokUtkMuatNaik." fail telah dipilih untuk dimuat naik.");
+        $_SESSION['touploadOK'] = 1;
+    }
+}
+
+function fnPreUploadFilesRename_v2(){
     $DBServer       = $_SESSION['DBServer'];
     $DBUser         = $_SESSION['DBUser'];
     $DBPass         = $_SESSION['DBPass'];
@@ -4033,10 +4364,10 @@ function fnUploadFiles(){
 }
 
 function fnFindBiggestDocID($a,$b,$c,$d){
-    $DBServer = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser   = $b;
-    $DBPass   = $c;
-    $DBName   = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -4287,10 +4618,10 @@ function fnInsertNewAgency($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnUpdateDivision($a,$b,$c,$d,$e,$f,$g,$h){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -4341,10 +4672,10 @@ function fnUpdateDivision($a,$b,$c,$d,$e,$f,$g,$h){
 }
 
 function fnUpdateData($a,$b,$c,$d,$e,$f,$g,$h){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -4394,10 +4725,10 @@ function fnUpdateData($a,$b,$c,$d,$e,$f,$g,$h){
 }
 
 function fnUpdateMinistry($a,$b,$c,$d,$e,$f,$g,$h){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -5789,10 +6120,10 @@ function fnShowDocTableContentNewStyle($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowDocTableContentForSimpleSearch($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -5982,10 +6313,10 @@ function fnShowDocTableContentForSimpleSearch($a,$b,$c,$d){
 }
 
 function fnShowDocTableContentForSimpleSearch_bak20180807($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -6084,10 +6415,10 @@ function fnShowDocTableContentForSimpleSearch_bak20180807($a,$b,$c,$d){
 }
 
 function fnShowDocTableContentForAdvancedSearch($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -6302,10 +6633,10 @@ function fnShowDocTableContentForAdvancedSearch($a,$b,$c,$d){
 }
 
 function fnShowDocTableContentForAdvancedSearchOriginal($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -6517,10 +6848,10 @@ function fnShowDocTableContentForAdvancedSearchOriginal($a,$b,$c,$d){
 }
 
 function fnShowDocTableContentForAdvancedSearch_bak20180808($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -6619,10 +6950,10 @@ function fnShowDocTableContentForAdvancedSearch_bak20180808($a,$b,$c,$d){
 # displays a table listing users registered in the system
 # used in listuser.php
 function fnShowUserTableContent($a,$b,$c,$d){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
@@ -6762,10 +7093,10 @@ function fnGetUserRecForUpdate($a,$b,$c,$d,$e){
 }
 
 function fnShowDataTableContent($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -6829,10 +7160,10 @@ function fnShowDataTableContent($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowDataTableContent_bak20180814($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -6890,10 +7221,10 @@ function fnShowDataTableContent_bak20180814($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowNameTitleTableContent($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -6957,10 +7288,10 @@ function fnShowNameTitleTableContent($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowDivisionTableContent($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -7025,10 +7356,10 @@ function fnShowDivisionTableContent($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowDivisionTableContent_bak20180814($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -7087,10 +7418,10 @@ function fnShowDivisionTableContent_bak20180814($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowAgencyTableContent($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -7177,10 +7508,10 @@ function fnSetDisplayStatForStatusDivs(){
 }
 
 function fnShowViewDocContent($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -7522,10 +7853,10 @@ function fnShowViewDocContent($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowViewDocContent_bak20180813($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -7817,10 +8148,10 @@ function fnShowViewDocContent_bak20180813($a,$b,$c,$d,$e,$f,$g){
 
 # called in listdoc.php
 function fnShowUpdateDocFormContent($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -8366,10 +8697,10 @@ function fnShowUpdateDocFormContentForSearch(){
 }
 
 function fnShowUpdateDocFormContent_bak201808021304($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -10385,10 +10716,10 @@ function fnCheckLoginStatus(){
 
 # Verify login credentials
 function fnVerifyLogin($a,$b,$c,$d,$e,$f){
-    $DBServer       = $a;
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $loginname      = $e;
     $loginpwd       = $f;
     // fnRunAlert($DBName);
