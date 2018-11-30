@@ -56,14 +56,39 @@ function fnGetDocCodeUsingAvailableInfo(){
     $_SESSION['kod_dok_step2'] = $row['kod_dok'];
     // fnRunAlert("kod_dok = ".$_SESSION['kod_dok_step2']);
   }
+  $conn->close();
+}
+
+function fnDeleteOneSupportDocForOneRec(){
+  $DBServer       = $_SESSION['DBServer'];
+  $DBUser         = $_SESSION['DBUser'];
+  $DBPass         = $_SESSION['DBPass'];
+  $DBName         = $_SESSION['DBName'];
+  $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+
+  // check connection
+  if ($conn->connect_error) {
+      trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+  }
+
+  $sql="DELETE FROM dok_sokongan WHERE nama_dok_disimpan = '".$_SESSION['nama_dok_untuk_dihapus']."'";
+
+  $rs=$conn->query($sql);
+
+  if($rs === false) {
+      trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+  } else {
+      // $arr = $rs->fetch_all(MYSQLI_ASSOC);
+  }
+  $conn->close();
 }
 
 
 // when 'btn_simpan_dok_baru' is pressed/clicked (the form)
 if (isset($_POST['btn_simpan_dok_baru']) AND $_GET['s']=='s1') {
   fnClearSessionNewDoc();
-  $_SESSION['tajuk_dok'] = $_POST['tajuk_dokumen'];
-  $_SESSION['tajuk_dok'] = checkAndRevalue($_SESSION['tajuk_dok']);
+  $_SESSION['kod_kat'] = $_POST['kod_kat'];
+  $_SESSION['kod_kat'] = checkAndRevalue($_SESSION['kod_kat']);
   // fnRunAlert("$_SESSION[tajuk_dok]");
   $_SESSION['bil_dok'] = $_POST['bil_dokumen'];
   $_SESSION['bil_dok_step2'] = $_POST['bil_dokumen'];
@@ -71,10 +96,10 @@ if (isset($_POST['btn_simpan_dok_baru']) AND $_GET['s']=='s1') {
   $_SESSION['tahun_dok'] = $_POST['tahun_dokumen'];
   $_SESSION['tahun_dok_step2'] = $_POST['tahun_dokumen'];
   $_SESSION['tahun_dok'] = checkAndRevalue($_SESSION['tahun_dok']);
+  $_SESSION['tajuk_dok'] = $_POST['tajuk_dokumen'];
+  $_SESSION['tajuk_dok'] = checkAndRevalue($_SESSION['tajuk_dok']);
   $_SESSION['des_dok'] = $_POST['des_dokumen'];
   $_SESSION['des_dok'] = checkAndRevalue($_SESSION['des_dok']);
-  $_SESSION['kod_kat'] = $_POST['kod_kat'];
-  $_SESSION['kod_kat'] = checkAndRevalue($_SESSION['kod_kat']);
   $_SESSION['kod_kat_step2'] = checkAndRevalue($_SESSION['kod_kat']);
   $_SESSION['kod_sektor'] = $_POST['kod_sektor'];
   $_SESSION['kod_sektor'] = checkAndRevalue($_SESSION['kod_sektor']);
@@ -130,7 +155,7 @@ if (isset($_POST['btn_simpan_dok_baru']) AND $_GET['s']=='s1') {
     }
     # semak pilihan kategori
     if ($_SESSION['verifiedOK'] == 1) {
-      if ($_SESSION['kod_kat'] != 1) {
+      if ($_SESSION['kod_kat'] != 1 || $_POST['kod_kat'] != 1) {
         $_SESSION['verifiedOK'] = 1;
       }
       else {
@@ -311,7 +336,7 @@ if ((isset($_POST['btn_simpan_dok_sokongan_baharu']) OR isset($_POST['btn_simpan
     if ($_SESSION['verifiedOK'] == 1) {
       # semak jika fail yang hendak dimuat naik telah dipilih
       # Kira bilangan fail yang hendak dimuatnaik dan pastikan minimum 1 fail.
-      fnPreUploadFilesRename_v2(); # yang ni skip dulu... terus bagi $_SESSION['touploadOK'] = 1
+      fnPreUploadFilesRename_v2();
       // $_SESSION['slot01_OK'] = 0;
       $_SESSION['slot02_OK'] = 0;
       $_SESSION['slot03_OK'] = 0;
@@ -358,6 +383,24 @@ if ((isset($_POST['btn_simpan_dok_sokongan_baharu']) OR isset($_POST['btn_simpan
     # jika fail tidak dapat dimuatnaik, input akan dipaparkan semula
     elseif (!isset($_SESSION['touploadOK']) OR $_SESSION['touploadOK'] == 0 OR $_SESSION['verifiedOK'] == 0) {
       fnRunAlert("Rekod TIDAK dikemaskini.");
+    }
+  }
+}
+
+if (isset($_POST['btn_hapus_dok_sokongan'])) {
+  $_SESSION['langkah'] = 2;
+  // fnRunAlert("Operasi hapus dokumen ".$_POST['btn_hapus_dok_sokongan']); // 20181130 syedfaizal - disable alert ujian ini
+  $_SESSION['nama_dok_untuk_dihapus'] = $_POST['btn_hapus_dok_sokongan'];
+  $isWritable = is_writable("../papers/$_POST[btn_hapus_dok_sokongan]");
+  // fnRunAlert($isWritable); // 20181130 syedfaizal - disable alert ujian ini
+  if ($isWritable) {
+    $unlinkStatus = unlink("../papers/$_POST[btn_hapus_dok_sokongan]");
+    if ($unlinkStatus) {
+      fnDeleteOneSupportDocForOneRec();
+      fnRunAlert("Dokumen ".$_POST['btn_hapus_dok_sokongan']." telah dihapuskan dan rekod telah dikemaskini.");
+    }
+    else {
+      fnRunAlert("Dokumen ".$_POST['btn_hapus_dok_sokongan']." tidak berjaya dihapuskan.");
     }
   }
 }
@@ -486,7 +529,6 @@ if (isset($_POST['btn_selesai_muatnaik'])) {
                       }
 
                       if ($rows_returned > 0) {
-                        # code...
                         $rs=$conn->query($sql);
 
                         if($rs === false) {
@@ -496,6 +538,7 @@ if (isset($_POST['btn_selesai_muatnaik'])) {
                         }
 
                         $table_number = 1;
+                        $matching_file_counter = 0;
                         foreach($arr as $row) {
                           $target_dir = "../papers/";
                           $target_file = "$target_dir" . $row['nama_dok_disimpan'];
@@ -507,15 +550,18 @@ if (isset($_POST['btn_selesai_muatnaik'])) {
                               <td><?= $row['nama_dok_asal'] ?></td>
                               <td><?= $row['nama_dok_disimpan'] ?></td>
                               <td>
-                                <button class="btn btn-danger"><span class="fa fa-trash"></span></button>
+                                <form id="form-dok-baharu" data-parsley-validate class="form-horizontal form-label-left" method="POST" enctype="multipart/form-data" action="newdoc_v2.php?s=s2">
+                                  <button type="submit" name="btn_hapus_dok_sokongan" id="btn_hapus_dok_sokongan" title="Hapus Dokumen <?= $row['nama_dok_disimpan'] ?>" value="<?= $row['nama_dok_disimpan'] ?>" onclick="return confirm('Anda pasti untuk hapuskan dokumen sokongan ini?')" class="btn btn-danger"><span class="fa fa-trash"></span></button>
+                                  </form>
                               </td>
                             </tr>
                             <?php
                             $table_number++;  
+                            $matching_file_counter++;
                           }
                         }
                       }
-                      else {
+                      elseif($rows_returned == 0 OR $matching_file_counter == 0) {
                         ?>
                         <tr class="table table-striped" align="right">
                           <th scope="row" colspan="4">Tiada dokumen sokongan telah dimuatnaik.</th>
