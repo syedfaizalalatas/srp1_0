@@ -413,7 +413,7 @@ function fnDropdownKategori($a,$b,$c,$d){
     <div class="form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kod_kat">Kategori <span class="required">*</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <select class="form-control" id="kod_kat" name="kod_kat" required="required" autofocus>
+            <select class="form-control" id="kod_kat" name="kod_kat" required autofocus>
                 <option value="1">Sila pilih...</option>
                 <?php  
                 $rs=$conn->query($sql);
@@ -901,10 +901,10 @@ function fnDropdownBahagianForView($a,$b,$c,$d){
 # this function will generate a dropdown list of jabatan 
 # used in newdoc.php, newuser.php, listuser.php, listdoc.php
 function fnDropdownJab($a,$b,$c,$d,$e){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $inputidname    = $e;
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
@@ -961,10 +961,10 @@ function fnDropdownJab($a,$b,$c,$d,$e){
 }
 
 function fnDropdownJabForView($a,$b,$c,$d,$e){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $inputidname    = $e;
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
@@ -1025,10 +1025,10 @@ function fnDropdownJabForView($a,$b,$c,$d,$e){
 }
 
 function fnDropdownJabStatSerah($a,$b,$c,$d,$e,$f){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $inputidname    = $e;
     $labelkhas      = $f;
 
@@ -1086,10 +1086,10 @@ function fnDropdownJabStatSerah($a,$b,$c,$d,$e,$f){
 }
 
 function fnDropdownJabStatSerahForView($a,$b,$c,$d,$e,$f){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $inputidname    = $e;
     $labelkhas      = $f;
 
@@ -2553,7 +2553,7 @@ function fnInsertDokSokongan($namaDokAsal,$namaDokDisimpan){
     // fnRunAlert("Marker 09");
     if ($dokSokonganStmt->execute()) {
         $_SESSION['insertRekodDokSokonganOK'] = 1; # berjaya
-        fnRunAlert("$_SESSION[mesejBerjaya]");
+        // fnRunAlert("$_SESSION[mesejBerjaya]"); // 20181130 syedfaizal - disable alert ni sebab dah ada alert selepas ini + jimatkan masa
     }
     else {
         $_SESSION['insertRekodDokSokonganOK'] = 0; # gagal
@@ -3720,7 +3720,7 @@ function fnUploadFilesRename_v2($nama_dok){
         if (move_uploaded_file($_FILES[$nama_dok]["tmp_name"], "$target_file")) { // add quote marks for target_file 20161013 1550
             ?>
             <script>
-                alert("<?php echo "Fail ".basename($_FILES[$nama_dok]["name"])." telah dimuatnaik sebagai ".$new_full_file_name."."; ?>");
+                // alert("<?php // echo "Fail ".basename($_FILES[$nama_dok]["name"])." telah dimuatnaik sebagai ".$new_full_file_name."."; ?>"); // 20181130 syedfaizal - disable alert ni sebab dah ada table yang paparkan maklumat ni + jimat masa
             </script>
             <?php
             $uploadOk = 1;
@@ -4077,7 +4077,7 @@ function fnPreUploadFilesRename_v2(){
         $_SESSION['touploadOK'] = 0;
     }
     else {
-        fnRunAlert($bilDokSokUtkMuatNaik." fail telah dipilih untuk dimuat naik.");
+        // fnRunAlert($bilDokSokUtkMuatNaik." fail telah dipilih untuk dimuat naik."); // 20181130 syedfaizal - disable alert ni sebab memang untuk sekali upload satu fail sahaja.
         $_SESSION['touploadOK'] = 1;
     }
 }
@@ -4404,10 +4404,10 @@ function fnFindBiggestDocID($a,$b,$c,$d){
 }
 
 function fnInsertNewData($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -4466,10 +4466,10 @@ function fnInsertNewData($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnInsertNewMinistry($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -4526,10 +4526,10 @@ function fnInsertNewMinistry($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnInsertNewDivision($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -4566,10 +4566,10 @@ function fnInsertNewDivision($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnInsertNewAgency($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -4778,10 +4778,10 @@ function fnUpdateMinistry($a,$b,$c,$d,$e,$f,$g,$h){
 }
 
 function fnShowDocReportAllContent($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -4971,10 +4971,10 @@ function fnShowDocReportSelectYear(){
 }
 
 function fnShowDocReportSelectYear_bak20180811($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -5080,10 +5080,10 @@ function fnShowDocReportSelectYear_bak20180811($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowDocReportByCat($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -5172,10 +5172,10 @@ function fnShowDocReportByCat($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowDocReportByDiv($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -5264,10 +5264,10 @@ function fnShowDocReportByDiv($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowDocReportBySec($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -5347,10 +5347,10 @@ function fnShowDocReportBySec($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowDocReportByStat($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -5430,10 +5430,10 @@ function fnShowDocReportByStat($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowDocTableContent($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -5619,10 +5619,10 @@ function fnShowDocTableContent($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowDocTableContentOriginal($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -5805,10 +5805,10 @@ function fnShowDocTableContentOriginal($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowDocTableContent_bak201808021139($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -5896,10 +5896,10 @@ function fnClearSessionForListFromReport(){
 }
 
 function fnShowDocTableContentNewStyle($a,$b,$c,$d,$e,$f,$g){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -8950,10 +8950,10 @@ function fnShowUpdateDocFormContent_bak201808021304($a,$b,$c,$d,$e,$f,$g){
 }
 
 function fnShowUpdateDivisionFormContent($a,$b,$c,$d,$e,$f,$g,$h){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
@@ -9092,10 +9092,10 @@ function fnShowUpdateDivisionFormContent($a,$b,$c,$d,$e,$f,$g,$h){
 }
 
 function fnShowUpdateFormContent($a,$b,$c,$d,$e,$f,$g,$h){
-    $DBServer       = $a; // e.g 'localhost' or '192.168.1.100'
-    $DBUser         = $b;
-    $DBPass         = $c;
-    $DBName         = $d;
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
     $table01name    = $e;
     $field01name    = $f;
     $field02name    = $g;
