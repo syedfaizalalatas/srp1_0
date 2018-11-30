@@ -3,6 +3,7 @@
             <div class="navbar nav_title" style="border: 0;">
               <a href="../sysmgmt/dashboard.php" class="site_title" style="display: none;"><i class="fa fa-globe"></i> <span>SRP 1.0</span></a>
               <br>
+              <?php // ?>
               <img src="../images/logo.png" height="55" width="240" style="border: 0px solid blue; margin: -20px 10px 10px -10px; float: left; size: 20px; background-color: white;">
             </div>
 
@@ -12,11 +13,11 @@
             <div class="profile">
               <div class="profile_info">
                 <span>Selamat Datang,</span>
-                <!-- <h2><?php echo $_SESSION['loggedinname']." [".$_SESSION['loggedinid']."]"; ?>&nbsp;</h2> -->
+                <?php // <!-- <h2>?><?php // echo $_SESSION['loggedinname']." [".$_SESSION['loggedinid']."]"; ?><?php // &nbsp;</h2> --> ?>
                 <h2><?php echo $_SESSION['loggedinname']; ?>&nbsp;</h2>
               </div>
               <div class="profile_pic">
-              <!-- <img src="../images/img.jpg" alt="..." class="img-circle profile_img"> -->
+              <?php // <!-- <img src="../images/img.jpg" alt="..." class="img-circle profile_img"> --> ?>
               &nbsp;
               </div>
             </div>
@@ -27,16 +28,20 @@
             <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
-                <!-- <h3>Dokumen</h3> -->
+                <?php // <!-- <h3>Dokumen</h3> --> ?>
                 <?php  
                 if ($_SESSION['loggedinid'] !== "" AND $_SESSION['loggedinname'] !== "") {
                   ?>
                   <ul class="nav side-menu">
                     <li>
-                      <a href="../sysmgmt/dashboard.php"><i class="fa fa-home"></i> Utama <!-- <span class="fa fa-chevron-down"></span> --></a>
+                      <a href="../sysmgmt/dashboard.php"><i class="fa fa-home"></i> Utama <?php // <!-- <span class="fa fa-chevron-down"></span> --> ?></a>
+                      <?php  
+                      /*
                       <!-- <ul class="nav child_menu"> -->
                         <!-- <li><a href="{{url('/dash')}}">Dashboard</a></li> -->
                       <!-- </ul> -->
+                      */
+                      ?>
                     </li>
                     <?php  
                     if ($_SESSION['status_pentadbir_dokumen'] == 2) {
@@ -46,18 +51,18 @@
                           <?php  
                           /*
                           <li><a href="../docsmgmt/newdoc.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen Lama</a></li><!-- s=n (source=new) -->
+                          <li><a href="../docsmgmt/listdoc.php?s=n"><i class="fa fa-table"></i>Senarai Dokumen Alt</a></li>
+                          <li><a href="../docsmgmt/searchdoc_o.php?s=n"><i class="fa fa-search"></i>Carian Dokumen Asal</a></li>
                           */
                           ?>
-                          <li><a href="../docsmgmt/newdoc_v2.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen</a></li><!-- s=n (source=new) -->
-                          <!-- <li><a href="../docsmgmt/listdoc.php?s=n"><i class="fa fa-table"></i>Senarai Dokumen Alt</a></li> -->
-                          <!-- <li><a href="../docsmgmt/listdoc_o.php?s=n"><i class="fa fa-table"></i>Senarai Dokumen Asal</a></li> -->
+                          <li><a href="../docsmgmt/newdoc_v2.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen</a></li><?php // <!-- s=n (source=new) --> ?>
+                          <li><a href="../docsmgmt/listdoc_o.php"><i class="fa fa-table"></i>Senarai Dokumen</a></li>
                           <li><a href="../docsmgmt/searchdoc.php"><i class="fa fa-search"></i>Carian Dokumen</a></li>
-                          <!-- <li><a href="../docsmgmt/searchdoc_o.php?s=n"><i class="fa fa-search"></i>Carian Dokumen Asal</a></li> -->
                           <li><a href="../docsmgmt/reportsearchdoc.php"><i class="fa fa-file-alt"></i>Laporan Dokumen</a></li>
                           <li><a><i class="fa fa-bar-chart"></i>Statistik Dokumen<span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
-                              <!-- <li><a href="../docsmgmt/docreport_all.php?s=n">Keseluruhan Dokumen</a></li> -->
-                              <li><a href="../docsmgmt/docreport_cat.php">Statistik Kategori</a></li><!-- remove ?s=n untuk mengekalkan chevron open -->
+                              <?php // <!-- <li><a href="../docsmgmt/docreport_all.php?s=n">Keseluruhan Dokumen</a></li> --> ?>
+                              <li><a href="../docsmgmt/docreport_cat.php">Statistik Kategori</a></li><?php // <!-- remove ?s=n untuk mengekalkan chevron open --> ?>
                               <li><a href="../docsmgmt/docreport_div.php">Statistik Bahagian</a></li>
                               <li><a href="../docsmgmt/docreport_sec.php">Statistik Sektor</a></li>
                               <li><a href="../docsmgmt/docreport_stat.php">Statistik Status</a></li>
@@ -102,6 +107,8 @@
                       <?php
                     }
                     ?>
+                    <?php 
+                    /*
                     <!-- <li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a> -->
                     <!-- <ul class="nav child_menu"> -->
                     <!-- <li><a href="form.html">General Form</a></li> -->
@@ -146,6 +153,8 @@
                     <!-- <li><a href="fixed_footer.html">Fixed Footer</a></li> -->
                     <!-- </ul> -->
                     <!-- </li> -->
+                    */ 
+                    ?>
                   </ul>
                   <?php
                 }
@@ -154,6 +163,8 @@
               <div class="menu_section">
                 <!-- <h3>Pengguna</h3> -->
                 <ul class="nav side-menu">
+                  <?php  
+                  /*
                   <!-- <li><a><i class="fa fa-bug"></i> Additional Pages <span class="fa fa-chevron-down"></span></a> -->
                   <!-- <ul class="nav child_menu"> -->
                   <!-- <li><a href="e_commerce.html">E-commerce</a></li> -->
@@ -192,6 +203,8 @@
                   <!-- </ul> -->
                   <!-- </li>                   -->
                   <!-- <li><a href="javascript:void(0)"><i class="fa fa-laptop"></i> Landing Page <span class="label label-success pull-right">Coming Soon</span></a></li> -->
+                  */
+                  ?>
                 </ul>
               </div>
 
@@ -208,6 +221,8 @@
 
             <!-- /menu footer buttons -->
             <div hidden class="sidebar-footer hidden-small">
+              <?php  
+              /*
               <!-- <a data-toggle="tooltip" data-placement="top" title="Settings">
                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
               </a>
@@ -229,6 +244,8 @@
               <!-- <a hidden href="../external/login.php?a=9" data-toggle="tooltip" data-placement="top" title="Log Keluar">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               </a> -->
+              */
+              ?>
             </div>
             <!-- /menu footer buttons -->
           </div>
