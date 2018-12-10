@@ -8,6 +8,7 @@ s1 = step 1
 s2 = step 2
 */
 // ("source = ".$_GET['s']);
+// this is for new doc only
 if ($_GET['s'] != 's1' AND $_GET['s'] != 's2') {
   fnResetSessionsForPages();
 }

@@ -84,6 +84,7 @@ function fnResetSessionsForPages(){
     $_SESSION['currentPage'] = 1; # for page with pagination
     $_SESSION['langkah'] = 1; # for newdoc_v2.php
     $_SESSION['statusDaftarDokumen'] = 'baharu'; # for newdoc_v2.phps
+    $_SESSION['user_nak_tengok_perincian'] = 0;
 }
 
 
@@ -5684,16 +5685,23 @@ function fnShowDocTableContentOriginal($a,$b,$c,$d,$e,$f,$g){
         <tr><!-- jadual senarai dokumen -->
             <td><?php echo $counter ?></td>
             <td hidden><?php echo $row[$field01name] ?></td>
-            <td><?php echo stripslashes(strtoupper($row['tajuk_dok'])) ?> <?php echo $perkataanBil ?> <?php echo $bilDok ?><?php echo $strokeBil ?><?php echo $row['tahun_dok'] ?></td>
+            <td>
+                
+                <?php echo stripslashes(strtoupper($row['tajuk_dok'])) ?> <?php echo $perkataanBil ?> <?php echo $bilDok ?><?php echo $strokeBil ?><?php echo $row['tahun_dok'] ?>
+                <?php /*<button type='submit' id='btn_papar_perincian_dokumen' name='btn_papar_perincian_dokumen' class='btn btn-default btn-block' title='Papar' value='<?php echo $row['kod_dok'] ?>'></button>*/ ?>
+                
+            </td>
             <td style='align-content: center;' align='center'>
-                <button type='submit' id='btn_papar_borang_kemaskini' name='btn_papar_borang_kemaskini' class='btn btn-success' title='Kemaskini' value='<?php echo $row['kod_dok'] ?>'><i class='fa fa-edit'></i></button>
+                <?php /*<button type='submit' id='btn_papar_borang_kemaskini' name='btn_papar_borang_kemaskini' class='btn btn-success' title='Kemaskini' value='<?php echo $row['kod_dok'] ?>'><i class='fa fa-edit'></i></button>*/ ?>
                 <button type='submit' id='btn_papar_perincian_dokumen' name='btn_papar_perincian_dokumen' class='btn btn-success' title='Papar' value='<?php echo $row['kod_dok'] ?>'><i class='fa fa-eye'></i></button>
                 <?php 
+                /*
                 if ($_SESSION['status_pentadbir_super']==1 OR $_SESSION['status_pentadbir_dokumen']==2) {
                     ?>
                     <a href="delete.php?id=<?php echo $row['kod_dok']; ?>&source=l" title="Hapus Rekod <?php echo $row['kod_dok']; ?>" class='btn btn-danger' onclick="return confirm('Anda pasti untuk padamkan rekod?')"><i class="fa fa-trash"></i></a>
                     <?php
                 }
+                */
                 ?>
             </td>
         </tr>

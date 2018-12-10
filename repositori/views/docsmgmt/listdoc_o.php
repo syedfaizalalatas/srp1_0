@@ -7,6 +7,62 @@ errors
 Notice: Undefined index: s in /Users/Salbiyah/Sites/srp1_0d/views/docsmgmt/listdoc.php on line 5
 
 */
+# check if this page is just loaded from the sidebar menu
+// if (($_GET['s'] != 's1' AND $_GET['s'] != 's2') OR isset($_GET['s']) OR $_GET['s'] == '') {
+if (!isset($_GET['s']) AND !isset($_POST['btn_papar_perincian_dokumen'])) {
+  // fnRunAlert("s = ".$_GET['s']);
+  // fnRunAlert("0-0");
+  // fnRunAlert("btn_papar_perincian_dokumen = ".$_POST['btn_papar_perincian_dokumen']);
+  fnResetSessionsForPages();
+  $_SESSION['updateDocOK'] = 0;
+  $_SESSION['status_papar_perincian_dokumen'] = "";
+  $_SESSION['status_papar_perincian_dokumen'] = 0;
+  $_SESSION['status_buka_borang_kemaskini_dokumen'] = "";
+  $_SESSION['status_buka_borang_kemaskini_dokumen'] = 0;
+}
+elseif (!isset($_GET['s']) AND isset($_POST['btn_papar_perincian_dokumen'])) {
+  // fnRunAlert("s = ".$_GET['s']);
+  // fnRunAlert("0-1");
+  // fnRunAlert("btn_papar_perincian_dokumen = ".$_POST['btn_papar_perincian_dokumen']);
+  $_SESSION['user_nak_tengok_perincian'] = 1;
+  $_SESSION['updateDocOK'] = 0;
+  $_SESSION['status_papar_perincian_dokumen'] = "";
+  $_SESSION['status_papar_perincian_dokumen'] = 1;
+  // fnRunAlert("Status Papar = ".$_SESSION['status_papar_perincian_dokumen']);
+  $_SESSION['status_buka_borang_kemaskini_dokumen'] = "";
+  $_SESSION['status_buka_borang_kemaskini_dokumen'] = 0;
+  $_SESSION['kod_dok_untuk_dikemaskini'] = $_POST['btn_papar_perincian_dokumen'];
+  $_SESSION['kod_dok_untuk_dipapar'] = $_POST['btn_papar_perincian_dokumen'];
+}
+
+if ($_SESSION['pageSource'] == 'new') {
+  $_GET['s'] = 'n';
+}
+
+# When a user clicks the 'show doc detail'
+if ($_SESSION['user_nak_tengok_perincian'] == 1) {
+  $_SESSION['updateDocOK'] = 0;
+  $_SESSION['status_papar_perincian_dokumen'] = "";
+  $_SESSION['status_papar_perincian_dokumen'] = 1;
+  $_SESSION['status_buka_borang_kemaskini_dokumen'] = "";
+  $_SESSION['status_buka_borang_kemaskini_dokumen'] = 0;
+  $_SESSION['kod_dok_untuk_dikemaskini'] = $_POST['btn_papar_perincian_dokumen'];
+  $_SESSION['kod_dok_untuk_dipapar'] = $_POST['btn_papar_perincian_dokumen'];
+}
+
+if (isset($_POST['btn_tutup_perincian_dokumen'])) {
+  $_POST['btn_papar_perincian_dokumen'] = "";
+  $_SESSION['status_papar_perincian_dokumen'] = 0;
+  $_SESSION['status_buka_borang_kemaskini_dokumen'] = 0;
+  fnClearSessionListDoc();
+}
+
+if ($_SESSION['updateDocOK'] == 1) {
+  $_SESSION['status_papar_perincian_dokumen'] = 0;
+  $_SESSION['status_buka_borang_kemaskini_dokumen'] = 0;
+  fnClearSessionListDoc();
+}
+
 # clear session from other forms newuser, updateuser, updatedoc
 if (isset($_GET['s']) == 'n') {
   // form is opened from the sidebar, clear the session
@@ -67,13 +123,13 @@ if (isset($_POST['btn_search_doclist'])) {
 # When a user clicks the 'open edit doc form'
 if (isset($_POST['btn_papar_borang_kemaskini'])) {
   $_SESSION['updateDocOK'] = 0;
-  $_SESSION['status_papar_perincian_dokumen'] = 0;
+  // $_SESSION['status_papar_perincian_dokumen'] = 0;
   $_SESSION['status_buka_borang_kemaskini_dokumen'] = 1;
   $_SESSION['kod_dok_untuk_dikemaskini'] = $_POST['btn_papar_borang_kemaskini'];
 }
-if (!isset($_SESSION['btn_papar_borang_kemaskini_dari_perincian_dokumen'])) {
+if (isset($_SESSION['btn_papar_borang_kemaskini_dari_perincian_dokumen'])) {
   $_SESSION['updateDocOK'] = 0;
-  $_SESSION['status_papar_perincian_dokumen'] = 0;
+  // $_SESSION['status_papar_perincian_dokumen'] = 0;
   $_SESSION['status_buka_borang_kemaskini_dokumen'] = 1;
   // fnRunAlert("opened from view");
   // fnRunAlert("$_SESSION[kod_dok_untuk_dikemaskini]");
@@ -83,26 +139,6 @@ if (!isset($_SESSION['btn_papar_borang_kemaskini_dari_perincian_dokumen'])) {
   // else {
     // fnRunAlert("Tiada kod dokumen!");
   // }
-}
-# When a user clicks the 'show doc detail'
-if (isset($_POST['btn_papar_perincian_dokumen'])) {
-  $_SESSION['updateDocOK'] = 0;
-  $_SESSION['status_papar_perincian_dokumen'] = "";
-  $_SESSION['status_papar_perincian_dokumen'] = 1;
-  $_SESSION['status_buka_borang_kemaskini_dokumen'] = "";
-  $_SESSION['status_buka_borang_kemaskini_dokumen'] = 0;
-  $_SESSION['kod_dok_untuk_dikemaskini'] = $_POST['btn_papar_perincian_dokumen'];
-  $_SESSION['kod_dok_untuk_dipapar'] = $_POST['btn_papar_perincian_dokumen'];
-}
-if (isset($_POST['btn_tutup_perincian_dokumen'])) {
-  $_SESSION['status_papar_perincian_dokumen'] = 0;
-  $_SESSION['status_buka_borang_kemaskini_dokumen'] = 0;
-  fnClearSessionListDoc();
-}
-if ($_SESSION['updateDocOK'] == 1) {
-  $_SESSION['status_papar_perincian_dokumen'] = 0;
-  $_SESSION['status_buka_borang_kemaskini_dokumen'] = 0;
-  fnClearSessionListDoc();
 }
 
 # when user clicked 'simpan' pada BORANG KEMAS KINI
@@ -358,11 +394,23 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
       fnClearSessionListDoc();
     }
     # if view button in table is clicked
+    // fnRunAlert("Pengesan 1");
+    // fnRunAlert("Status Papar = ".$_SESSION['status_papar_perincian_dokumen']);
+    // if (isset($_POST['btn_papar_perincian_dokumen']) && ($_SESSION['status_papar_perincian_dokumen'] != "" || $_SESSION['status_papar_perincian_dokumen'] === 1)) {
+    // if (isset($_POST['btn_papar_perincian_dokumen'])) {
     if ($_SESSION['status_papar_perincian_dokumen'] == 1) {
+      $paparPerincian = "";
+      // fnRunAlert("Pengesan 2");
+      // fnRunAlert("Status Papar = ".$_SESSION['status_papar_perincian_dokumen']);
       $_SESSION['status_papar_perincian_dokumen'] = 0;
+      // fnRunAlert("Status Papar = ".$_SESSION['status_papar_perincian_dokumen']);
       $kod_dok_untuk_dipapar = $_SESSION['kod_dok_untuk_dipapar'];
+    }
+    elseif (isset($_POST['btn_tutup_perincian_dokumen'])) {
+      $paparPerincian = "hidden";
+    }
       ?>
-      <div class="row">
+      <div <?= $paparPerincian; ?> class="row">
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="x_panel">
             <div class="x_title">
@@ -380,10 +428,15 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
                   <div class="col-lg-6 col-md-6 col-md-offset-3 col-sm-6 col-xs-12" align="center">
                   <!-- <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3" align="center"> -->
                     <!-- ini adalah di dalam borang view -->
+                    <?php 
+                    /*
                     <input type="submit" id="btn_papar_borang_kemaskini_dari_perincian_dokumen" name="btn_papar_borang_kemaskini_dari_perincian_dokumen" class="btn btn-success" title="Buka Borang Kemaskini Dokumen" value="Buka Borang Kemaskini">
+                    */ 
+                    ?>
                     <input type="submit" id="btn_tutup_perincian_dokumen" name="btn_tutup_perincian_dokumen" class="btn btn-danger" title="Tutup" value="Tutup">
                     <?php  
                     # dari senarai?
+                    /*
                     if ($_SESSION['status_pentadbir_super']==1 OR $_SESSION['status_pentadbir_dokumen']==2) {
                         ?>
                         <a href="delete.php?id=<?php echo $_SESSION['kod_dok_to_delete']; ?>&source=l" title="Hapus Rekod <?php echo $_SESSION['kod_dok_to_delete']; ?>" class='btn btn-danger' onclick="return confirm('Anda pasti untuk padamkan rekod?')">Hapus Rekod</a>
@@ -395,6 +448,7 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
                         $button_delete = "";
                     }
                     // echo $button_delete;
+                    */
                     ?>
                   </div>
                 </div>
@@ -404,9 +458,8 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
         </div>
       </div>
       <?php
-    }
     # if update button in table is clicked
-    if ($_SESSION['status_buka_borang_kemaskini_dokumen'] != 0) {
+    if ($_SESSION['status_buka_borang_kemaskini_dokumen'] == 9) {
       $kod_dok_untuk_dikemaskini = $_SESSION['kod_dok_untuk_dikemaskini'];
       ?>
       <div class="row">
@@ -477,12 +530,12 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
               </div>
             </div>
             <!-- <table id="datatable-buttons" class="table table-striped table-bordered tablesorter"> -->
-            <table id="myTable" class="table table-striped table-bordered">
+            <table width="100%" id="myTable" class="table table-striped table-bordered">
               <thead>
                 <tr>
                   <th width="40">Bil</th>
                   <th width="100" hidden>Kod</th>
-                  <th>Tajuk</th>
+                  <th width="">Tajuk</th>
                   <th width="165">Tindakan</th>
                 </tr>
               </thead>
