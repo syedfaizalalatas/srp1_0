@@ -9,7 +9,7 @@
 
             <div class="clearfix"></div>
 
-            <!-- menu profile quick info -->
+            <?php /*<!-- menu profile quick info -->*/ ?>
             <div class="profile">
               <div class="profile_info">
                 <span>Selamat Datang,</span>
@@ -21,11 +21,11 @@
               &nbsp;
               </div>
             </div>
-            <!-- /menu profile quick info -->
+            <?php /*<!-- /menu profile quick info -->*/ ?>
 
             <div class="clearfix"></div>
 
-            <!-- sidebar menu -->
+            <?php /*<!-- sidebar menu -->*/ ?>
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
                 <?php // <!-- <h3>Dokumen</h3> --> ?>
@@ -98,10 +98,10 @@
                           <li><a href="../sysmgmt/docstatusmgmt.php"><i class="fa fa-table"></i>Status Dokumen</a></li>
                           <li><a href="../sysmgmt/strategiccoremgmt.php"><i class="fa fa-table"></i>Teras Strategik</a></li>
                           <li><a href="../sysmgmt/sectormgmt.php"><i class="fa fa-table"></i>Sektor</a></li>
-                          <!-- <li><a href="../sysmgmt/datamgmttemplate.php">Template</a></li> -->
-                          <!-- <li><a href="../sysmgmt/datamgmtcleantemplate.php">Template Clean</a></li> -->
+                          <?php /*<!-- <li><a href="../sysmgmt/datamgmttemplate.php">Template</a></li> -->*/ ?>
+                          <?php /*<!-- <li><a href="../sysmgmt/datamgmtcleantemplate.php">Template Clean</a></li> -->*/ ?>
                           <li><a href="../sysmgmt/nametitlemgmt.php"><i class="fa fa-table"></i>Gelaran Nama</a></li>
-                          <!-- <li><a href="../sysmgmt/testfilename.php"><i class="fa fa-table"></i>Test Filename</a></li> -->
+                          <?php /*<!-- <li><a href="../sysmgmt/testfilename.php"><i class="fa fa-table"></i>Test Filename</a></li> -->*/ ?>
                         </ul>
                       </li>
                       <?php
@@ -161,7 +161,7 @@
                 ?>
               </div>
               <div class="menu_section">
-                <!-- <h3>Pengguna</h3> -->
+                <?php /*<!-- <h3>Pengguna</h3> -->*/ ?>
                 <ul class="nav side-menu">
                   <?php  
                   /*
@@ -207,19 +207,18 @@
                   ?>
                 </ul>
               </div>
-
             </div>
-            <!-- /sidebar menu -->
+            <?php /*<!-- /sidebar menu -->*/ ?>
             
-            <!-- sidemenu footer -->
+            <?php /*<!-- sidemenu footer -->*/ ?>
             <div hidden class="sidemenu-footer hidden-small">
               <a href="../external/login.php?a=9" data-toggle="tooltip" data-placement="top" title="Log Keluar">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               </a>
             </div>
-            <!-- /sidemenu footer -->
+            <?php /*<!-- /sidemenu footer -->*/ ?>
 
-            <!-- /menu footer buttons -->
+            <?php /*<!-- /menu footer buttons -->*/ ?>
             <div hidden class="sidebar-footer hidden-small">
               <?php  
               /*
@@ -247,6 +246,6 @@
               */
               ?>
             </div>
-            <!-- /menu footer buttons -->
+            <?php /*<!-- /menu footer buttons -->*/ ?>
           </div>
         </div>

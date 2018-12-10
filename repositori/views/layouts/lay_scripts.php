@@ -1,3 +1,11 @@
+    <script type="text/javascript">
+      $("#sidebar-menu").stick_in_parent();
+      var contentHeight = $(".content").outerHeight();
+      $(document).ready(function() {
+          $("#sidebar-menu").css('min-height', contentHeight);
+      });
+    </script>
+
     <!-- jQuery -->
     <script src="../vendors/jquery/dist/jquery.min.js"></script>
     
