@@ -73,8 +73,17 @@ if (isset($_POST['sbmt_cari_lengkap'])) {
 	$_SESSION['kod_status'] = $_POST['kod_status']; # beri nilai drp borang
 	$_SESSION['cl_tajuk_dokumen_to_show_below_view'] = $_POST['cl_tajuk_dokumen']; # beri nilai drp borang
 	$_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+	// fnRunAlert("Tahun mula = ".$_POST['cl_tahun_dokumen']);
+	// fnRunAlert("Tahun akhir = ".$_POST['cl_tahun_dokumen_hingga']);
 	if ($_POST['cl_tahun_dokumen_hingga']<>"") {
-			$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen_hingga']; # beri nilai drp borang
+			if ($_POST['cl_tahun_dokumen']>$_POST['cl_tahun_dokumen_hingga']) {
+				# code...
+				$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+				$_SESSION['cl_tahun_dokumen_hingga'] = $_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'];
+			} else {
+				$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen_hingga']; # beri nilai drp borang
+				$_SESSION['cl_tahun_dokumen_hingga'] = $_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'];
+			}
 	}
 	else {
 			$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
@@ -860,12 +869,42 @@ else {
 								<label class="control-label col-md-3 col-sm-3 col-xs-12" for="cl_tahun_dokumen">Tahun Dokumen (dari) <span class="required" hidden>*</span>
 								</label>
 								<div class="col-md-2 col-sm-2 col-xs-12">
-								<input value="" type="text" id="cl_tahun_dokumen" name="cl_tahun_dokumen" class="form-control col-md-7 col-xs-12" maxlength="4" pattern="\d{1,4}">
+									<select class="form-control col-md-7 col-xs-12" id="cl_tahun_dokumen" name="cl_tahun_dokumen">
+										<option value="">Sila pilih...</option>
+										<?php  
+										$tahunTerawal = 1900;
+										$tahunSemasa = date("Y");
+										// fnRunAlert("Tahun Semasa = ".$tahunSemasa);
+										$tahunDipaparkan = $tahunTerawal;
+										while ($tahunDipaparkan <= $tahunSemasa) {
+											?>
+											<option value="<?= $tahunDipaparkan; ?>"><?= $tahunDipaparkan; ?></option>
+											<?php
+											$tahunDipaparkan++;
+										}
+										?>
+									</select>
+									<?php /*<input value="" type="text" id="cl_tahun_dokumen" name="cl_tahun_dokumen" class="form-control col-md-7 col-xs-12" maxlength="4" pattern="\d{1,4}">*/ ?>
 								</div>
 								<label class="control-label col-md-2 col-sm-2 col-xs-12" for="cl_tahun_dokumen">(hingga) <span class="required" hidden>*</span>
 								</label>
 								<div class="col-md-2 col-sm-2 col-xs-12">
-								<input value="" type="text" id="_hingga" name="cl_tahun_dokumen_hingga" class="form-control col-md-7 col-xs-12" maxlength="4" pattern="\d{1,4}">
+									<select class="form-control col-md-7 col-xs-12" id="cl_tahun_dokumen_hingga" name="cl_tahun_dokumen_hingga">
+										<option value="">Sila pilih...</option>
+										<?php  
+										$tahunTerawal = 1900;
+										$tahunSemasa = date("Y");
+										// fnRunAlert("Tahun Semasa = ".$tahunSemasa);
+										$tahunDipaparkan = $tahunSemasa;
+										while ($tahunDipaparkan >= $tahunTerawal) {
+											?>
+											<option value="<?= $tahunDipaparkan; ?>"><?= $tahunDipaparkan; ?></option>
+											<?php
+											$tahunDipaparkan--;
+										}
+										?>
+									</select>
+									<?php /*<input value="" type="text" id="_hingga" name="cl_tahun_dokumen_hingga" class="form-control col-md-7 col-xs-12" maxlength="4" pattern="\d{1,4}">*/ ?>
 								</div>
 							</div>
 							<?php  
