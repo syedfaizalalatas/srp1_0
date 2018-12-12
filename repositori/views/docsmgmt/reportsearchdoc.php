@@ -21,10 +21,16 @@ $field01name = "kod_data";
 $field02name = "nama_data";
 
 # when search page is opened from the menu
-if (!isset($_GET['s']) == "n" OR isset($_GET['s']) == "n") {
+fnRunAlert("pageSource = ".$_SESSION['pageSource']);
+if ($_SESSION['pageSource'] == 'new') {
+  $_GET['s'] = 'n';
+}
+
+if ($_GET['s'] == "n" && isset($_GET['s'])) {
 	$_SESSION['search_form_opened'] = "advanced";
 	fnClearSimpleDocSearchSessions();
 	fnClearAdvancedDocSearchSessions();
+	$_SESSION['bil_dok_carian_lengkap'] = "";
 	$_SESSION['status_papar_perincian_dokumen'] = 0;
 }
 
@@ -67,6 +73,7 @@ if (isset($_POST['sbmt_cari_lengkap'])) {
 	# kategori, tahun, tajuk, kementerian, agensi, sektor, bahagian, status
 	$_SESSION['cl_tajuk_dokumen'] = $_POST['cl_tajuk_dokumen']; # beri nilai drp borang
 	$_SESSION['cl_tahun_dokumen'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+	$_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
 	$_SESSION['kod_kat'] = $_POST['kod_kat']; # beri nilai drp borang
 	$_SESSION['kod_sektor'] = $_POST['kod_sektor']; # beri nilai drp borang
 	$_SESSION['kod_bah'] = $_POST['kod_bah']; # beri nilai drp borang
@@ -86,6 +93,7 @@ if (isset($_POST['sbmt_cari_lengkap'])) {
 			}
 			if ($_POST['cl_tahun_dokumen'] == "") {
 				$_SESSION['cl_tahun_dokumen'] = $_SESSION['cl_tahun_dokumen_hingga'];
+				$_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_SESSION['cl_tahun_dokumen_hingga']; # beri nilai drp borang
 			}
 	}
 	else {
@@ -985,7 +993,7 @@ else {
 			}
 			// fnRunAlert("Form yang dibuka $_SESSION[search_form_opened]");
 			// fnRunAlert("$_SESSION[bil_dok_carian_lengkap] carian lengkap");
-			if (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] > 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z") {
+			if (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] > 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z" AND $_SESSION['bil_dok_carian_lengkap'] <> "") {
 				// fnRunAlert($_SESSION['bil_dok_carian_lengkap']);
 				// fnRunAlert("paparkan mesej hasil carian lengkap");
 				$_SESSION['bil_dok_carian_lengkap_utk_ulang'] = $_SESSION['bil_dok_carian_lengkap'];
@@ -1004,7 +1012,7 @@ else {
 				</div>
 				<?php
 			}
-			elseif (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] == 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z") {
+			elseif (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] == 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z" AND $_SESSION['bil_dok_carian_lengkap'] <> "") {
 				// fnRunAlert("paparkan mesej hasil carian lengkap");
 				?>
 				<div class="row">
@@ -1196,7 +1204,7 @@ else {
 	    }
 
 		# paparan senarai dokumen hasil carian lengkap
-		if (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] >= 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z" AND $_SESSION['search_form_opened'] == "advanced") {
+		if (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] >= 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z" AND $_SESSION['bil_dok_carian_lengkap'] <> "" AND $_SESSION['search_form_opened'] == "advanced") {
 			# paparkan jadual rekod hasil daripada carian lengkap
 			// fnRunAlert("paparkan hasil carian lengkap");
 			?>
