@@ -1228,7 +1228,7 @@ else {
 											<th width="40">Bil</th>
 											<th width="100" hidden>Kod</th>
 											<th>Tajuk</th>
-											<th width="160">Tindakan</th>
+											<th hidden width="160">Tindakan</th>
 										</tr>
 									</thead>
 
