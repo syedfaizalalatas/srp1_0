@@ -84,6 +84,9 @@ if (isset($_POST['sbmt_cari_lengkap'])) {
 				$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen_hingga']; # beri nilai drp borang
 				$_SESSION['cl_tahun_dokumen_hingga'] = $_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'];
 			}
+			if ($_POST['cl_tahun_dokumen'] == "") {
+				$_SESSION['cl_tahun_dokumen'] = $_SESSION['cl_tahun_dokumen_hingga'];
+			}
 	}
 	else {
 			$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
