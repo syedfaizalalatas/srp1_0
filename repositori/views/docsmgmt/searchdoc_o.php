@@ -21,10 +21,17 @@ $field01name = "kod_data";
 $field02name = "nama_data";
 
 # when search page is opened from the menu
-if (!isset($_GET['s']) == "n" OR isset($_GET['s']) == "n") {
+if ($_SESSION['pageSource'] == 'new') {
+  $_GET['s'] = 'n';
+  $_SESSION['kod_kat_step2'] = '';
+}
+
+if ($_GET['s'] == "n" && isset($_GET['s'])) {
 	$_SESSION['search_form_opened'] = "advanced";
 	fnClearSimpleDocSearchSessions();
 	fnClearAdvancedDocSearchSessions();
+	$_SESSION['bil_dok_carian_lengkap'] = "";
+	// fnRunAlert("bil_dok_carian_lengkap = ".$_SESSION['bil_dok_carian_lengkap']);
 	$_SESSION['status_papar_perincian_dokumen'] = 0;
 }
 
@@ -59,6 +66,7 @@ if (isset($_POST['sbmt_cari_mudah'])) {
 		}
 	}
 }
+
 # when user clicked 'Cari' in advanced search form
 if (isset($_POST['sbmt_cari_lengkap'])) {
 	$_SESSION['search_form_opened'] = "advanced"; # beri nilai
@@ -67,12 +75,32 @@ if (isset($_POST['sbmt_cari_lengkap'])) {
 	fnClearAdvancedDocSearchSessions();
 	$_SESSION['cl_tajuk_dokumen'] = $_POST['cl_tajuk_dokumen']; # beri nilai drp borang
 	$_SESSION['cl_tahun_dokumen'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+	$_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+	if ($_POST['cl_tahun_dokumen_hingga']<>"") {
+			if ($_POST['cl_tahun_dokumen']>$_POST['cl_tahun_dokumen_hingga']) {
+				# code...
+				$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+				$_SESSION['cl_tahun_dokumen_hingga'] = $_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'];
+			} else {
+				$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen_hingga']; # beri nilai drp borang
+				$_SESSION['cl_tahun_dokumen_hingga'] = $_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'];
+			}
+			if ($_POST['cl_tahun_dokumen'] == "") {
+				$_SESSION['cl_tahun_dokumen'] = $_SESSION['cl_tahun_dokumen_hingga'];
+				$_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_SESSION['cl_tahun_dokumen_hingga']; # beri nilai drp borang
+			}
+	}
+	else {
+			$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+	}
+	// fnRunAlert("cl_tahun_dokumen_to_show_below_view = ".$_SESSION['cl_tahun_dokumen_to_show_below_view']);
+	$_SESSION['cl_tahun_dokumen_hingga'] = $_POST['cl_tahun_dokumen_hingga']; # beri nilai drp borang
 	$_SESSION['kod_kat'] = $_POST['kod_kat']; # beri nilai drp borang
 	$_SESSION['kod_sektor'] = $_POST['kod_sektor']; # beri nilai drp borang
 	$_SESSION['kod_bah'] = $_POST['kod_bah']; # beri nilai drp borang
 	$_SESSION['kod_status'] = $_POST['kod_status']; # beri nilai drp borang
 	$_SESSION['cl_tajuk_dokumen_to_show_below_view'] = $_POST['cl_tajuk_dokumen']; # beri nilai drp borang
-	$_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+	// $_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
 	$_SESSION['kod_kat_to_show_below_view'] = $_POST['kod_kat']; # beri nilai drp borang
 	$_SESSION['kod_sektor_to_show_below_view'] = $_POST['kod_sektor']; # beri nilai drp borang
 	$_SESSION['kod_bah_to_show_below_view'] = $_POST['kod_bah']; # beri nilai drp borang
@@ -451,7 +479,7 @@ if (isset($_POST['sbmt_cari_lengkap'])) {
 			fnRunAlert("Sila isi medan carian atau pilih salah satu kriteria rekod.");
 		}
 	}
-}
+} // sbmt_cari_lengkap
 
 # When a user clicks the 'show doc detail'
 if (isset($_POST['btn_papar_perincian_dokumen'])) {
@@ -465,7 +493,7 @@ if (isset($_POST['btn_papar_perincian_dokumen'])) {
 	$_SESSION['kod_dok_untuk_dipapar'] = $_POST['btn_papar_perincian_dokumen'];
 }
 
-/* kalau pengguna klik butang/ikon KEMAS KINI */
+/* kalau pengguna klik butang/ikon KEMAS KINI untuk buka borang kemas kini */
 if (isset($_POST['btn_papar_borang_kemaskini'])) {
 	$_SESSION['kombinasi_cl_dok'] = $_SESSION['kombinasi_cl_dok_utk_ulang'];
 	fnSearchDocAdvanced();
@@ -479,8 +507,244 @@ else {
 	$_SESSION['kod_dok_untuk_dikemaskini'] = "";
 }
 
-/* bila pengguna ketik pada butang kemas kini dalam BORANG KEMAS KINI */
+/* bila pengguna ketik pada butang kemas kini SAHAJA dalam BORANG KEMAS KINI */
 if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
+	// fnRunAlert("Dah ketik butang Kemas Kini!");
+	fnClearSessionNewDoc();
+	# use $_SESSION['kod_dok_untuk_dikemaskini'] for this doc's id
+	$_SESSION['tajuk_dok'] = $_POST['tajuk_dokumen'];
+	$_SESSION['tajuk_dok'] = checkAndRevalue($_SESSION['tajuk_dok']);
+	$_SESSION['bil_dok'] = $_POST['bil_dokumen'];
+	$_SESSION['bil_dok'] = checkAndRevalue($_SESSION['bil_dok']);
+	$_SESSION['tahun_dok'] = $_POST['tahun_dokumen'];
+	$_SESSION['tahun_dok'] = checkAndRevalue($_SESSION['tahun_dok']);
+	$_SESSION['des_dok'] = $_POST['des_dokumen'];
+	$_SESSION['des_dok'] = checkAndRevalue($_SESSION['des_dok']);
+	$_SESSION['kod_kat'] = $_POST['kod_kat'];
+	$_SESSION['kod_kat'] = checkAndRevalue($_SESSION['kod_kat']);
+	$_SESSION['kod_sektor'] = $_POST['kod_sektor'];
+	$_SESSION['kod_sektor'] = checkAndRevalue($_SESSION['kod_sektor']);
+	$_SESSION['kod_bah'] = $_POST['kod_bah'];
+	$_SESSION['kod_bah'] = checkAndRevalue($_SESSION['kod_bah']);
+	$_SESSION['kod_kem'] = $_POST['kod_kem'];
+	$_SESSION['kod_kem'] = checkAndRevalue($_SESSION['kod_kem']);
+	$_SESSION['kod_jab'] = $_POST['kod_jab'];
+	$_SESSION['kod_jab'] = checkAndRevalue($_SESSION['kod_jab']);
+	$_SESSION['kod_status'] = $_POST['kod_status'];
+	$_SESSION['kod_status'] = checkAndRevalue($_SESSION['kod_status']);
+	$_SESSION['id_pengemaskini'] = $_SESSION['loggedinid'];
+	$_SESSION['id_pengemaskini'] = checkAndRevalue($_SESSION['id_pengemaskini']);
+	$_SESSION['kod_jab_asal'] = $_POST['kod_jab_asal'];
+	$_SESSION['kod_jab_asal'] = checkAndRevalue($_SESSION['kod_jab_asal']);
+	$_SESSION['kod_jab_baharu'] = $_POST['kod_jab_baharu'];
+	$_SESSION['kod_jab_baharu'] = checkAndRevalue($_SESSION['kod_jab_baharu']);
+	$_SESSION['tag_dokumen'] = $_POST['tag_dokumen'];
+	$_SESSION['tag_dokumen'] = checkAndRevalue($_SESSION['tag_dokumen']);
+	$_SESSION['catatan_dokumen'] = $_POST['catatan_dokumen'];
+	$_SESSION['catatan_dokumen'] = checkAndRevalue($_SESSION['catatan_dokumen']);
+	$_SESSION['tarikh_wujud'] = $_POST['tarikh_wujud'];
+	$_SESSION['tarikh_wujud'] = checkAndRevalue($_SESSION['tarikh_wujud']);
+	$_SESSION['tarikh_mansuh'] = $_POST['tarikh_mansuh'];
+	$_SESSION['tarikh_mansuh'] = checkAndRevalue($_SESSION['tarikh_mansuh']);
+	$_SESSION['tarikh_pinda'] = $_POST['tarikh_pinda'];
+	$_SESSION['tarikh_pinda'] = checkAndRevalue($_SESSION['tarikh_pinda']);
+	$_SESSION['tajuk_dok_asal'] = $_POST['tajuk_dok_asal'];
+	$_SESSION['tajuk_dok_asal'] = checkAndRevalue($_SESSION['tajuk_dok_asal']);
+	$_SESSION['tajuk_dok_baharu'] = $_POST['tajuk_dok_baharu'];
+	$_SESSION['tajuk_dok_baharu'] = checkAndRevalue($_SESSION['tajuk_dok_baharu']);
+	$_SESSION['tarikh_serah'] = $_POST['tarikh_serah'];
+	$_SESSION['tarikh_serah'] = checkAndRevalue($_SESSION['tarikh_serah']);
+	fnSetTarikhStatusDoc();
+	$_SESSION['tarikh_dok'] = date("Y-m-d");
+	$_SESSION['tarikh_dok'] = checkAndRevalue($_SESSION['tarikh_dok']);
+	$_SESSION['tarikh_kemaskini'] = date("Y-m-d");
+	$_SESSION['tarikh_kemaskini'] = checkAndRevalue($_SESSION['tarikh_kemaskini']);
+
+	# start verifying form
+	$_SESSION['verifiedOK'] = 3; // initial value
+	if ($_SESSION['verifiedOK'] != 0) {
+	  	if ($_SESSION['loggedinid'] != 0) {
+	  		$_SESSION['verifiedOK'] = 1;
+	  	}
+	  	else {
+	  		$_SESSION['verifiedOK'] = 0;
+	  		fnRunAlert("Maaf, borang tidak dapat diproses kerana pengguna tidak log masuk dengan sah.");
+	  	}
+    	# semak jika ada duplikasi dokumen
+	  	if ($_SESSION['verifiedOK'] == 1) {
+	  		fnCheckSavedDocToUpdate($DBServer,$DBUser,$DBPass,$DBName);
+	  		if ($_SESSION['duplicatedoc'] == 0) {
+	  			$_SESSION['verifiedOK'] = 1;
+	  		}
+	  		else {
+	  			$_SESSION['verifiedOK'] = 0;
+	  		}
+	  	}
+	    # semak pilihan kategori
+	  	if ($_SESSION['verifiedOK'] == 1) {
+	  		if ($_SESSION['kod_kat'] != 1) {
+	  			$_SESSION['verifiedOK'] = 1;
+	  		}
+	  		else {
+	  			$_SESSION['verifiedOK'] = 0;
+	  			fnRunAlert("Sila pilih Kategori bagi dokumen ini.");
+	  		}
+	  	}
+	    # kira pilihan teras
+	  	if ($_SESSION['verifiedOK'] == 1) {
+	  		fnCountCheckedTeras($DBServer,$DBUser,$DBPass,$DBName);
+	  		if ($_SESSION['checked_teras'] == 0) {
+	  			$_SESSION['verifiedOK'] = 0;
+	  			fnRunAlert("Sila pilih sekurang-kurangnya satu Teras Strategik.");
+	  		}
+	  		else {
+	  			$_SESSION['verifiedOK'] = 1;
+	  		}
+	  	}
+	    # semak pilihan kementerian
+	  	if ($_SESSION['verifiedOK'] == 1) {
+	  		if ($_SESSION['kod_kem'] != 1) {
+	  			$_SESSION['verifiedOK'] = 1;
+	  		}
+	  		else {
+	  			$_SESSION['verifiedOK'] = 0;
+	  			fnRunAlert("Sila pilih Kementerian bagi dokumen baharu ini.");
+	  		}
+	  	}
+	    # semak pilihan jabatan
+	  	if ($_SESSION['verifiedOK'] == 1) {
+	  		if ($_SESSION['kod_jab'] != 1) {
+	  			$_SESSION['verifiedOK'] = 1;
+	  		}
+	  		else {
+	  			$_SESSION['verifiedOK'] = 0;
+	  			fnRunAlert("Sila pilih Jabatan/Agensi bagi dokumen baharu ini.");
+	  		}
+	  	}
+	    # semak pilihan sektor
+	  	if ($_SESSION['verifiedOK'] == 1) {
+	  		if ($_SESSION['kod_sektor'] != 1) {
+	  			$_SESSION['verifiedOK'] = 1;
+	  		}
+	  		else {
+	  			$_SESSION['verifiedOK'] = 0;
+	  			fnRunAlert("Sila pilih Sektor bagi dokumen baharu ini.");
+	  		}
+	  	}
+	    # semak pilihan bahagian
+	  	if ($_SESSION['verifiedOK'] == 1) {
+	  		if ($_SESSION['kod_bah'] != 1) {
+	  			$_SESSION['verifiedOK'] = 1;
+	  		}
+	  		else {
+	  			$_SESSION['verifiedOK'] = 0;
+	  			fnRunAlert("Sila pilih Bahagian bagi dokumen baharu ini.");
+	  		}
+	  	}
+	    # semak pilihan status
+	  	if ($_SESSION['verifiedOK'] == 1) {
+			# 1: Sila pilih...
+			# 2: Masih berkuatkuasa
+			# 3: Dimansuhkan - semak 'tarikh_mansuh'
+			# 4: Diserahkan kepada - semak 'tarikh_serah', 'kod_jab_asal', 'kod_jab_baharu'
+			# 5: Pindaan kepada - semak 'tajuk_dok_asal', 'tajuk_dok_baharu'
+	  		if ($_SESSION['kod_status'] == 1) {
+	  			$_SESSION['verifiedOK'] = 0;
+	  			fnRunAlert("Sila pilih Status bagi dokumen baharu ini.");
+	  		}
+	  		elseif ($_SESSION['kod_status'] == 2) {
+	  			$_SESSION['verifiedOK'] = 1;
+	  		}
+	  		elseif ($_SESSION['kod_status'] == 3) {
+	  			if ($_POST['tarikh_mansuh'] != "") {
+	  				$_SESSION['verifiedOK'] = 1;
+	  			}
+	  			else {
+	  				$_SESSION['verifiedOK'] = 0;
+	  				fnRunAlert("Sila lengkapkan maklumat status 'Dimansuhkan' dokumen ini.");
+	  			}
+	  		}
+	  		elseif ($_SESSION['kod_status'] == 4) {
+	  			if ($_POST['tarikh_serah'] != "" AND $_POST['kod_jab_asal'] != "1" AND $_POST['kod_jab_baharu'] != "1") {
+	  				$_SESSION['verifiedOK'] = 1;
+	  			}
+	  			else {
+	  				$_SESSION['verifiedOK'] = 0;
+	  				fnRunAlert("Sila lengkapkan maklumat status 'Diserahkan kepada' dokumen ini.");
+	  			}
+	  		}
+	  		elseif ($_SESSION['kod_status'] == 5) {
+	  			if ($_POST['tarikh_pinda'] != "" AND $_POST['tajuk_dok_asal'] != "" AND $_POST['tajuk_dok_baharu'] != "") {
+	  				$_SESSION['verifiedOK'] = 1;
+	  			}
+	  			else {
+	  				$_SESSION['verifiedOK'] = 0;
+	  				fnRunAlert("Sila lengkapkan maklumat status 'Pindaan kepada' dokumen ini.");
+	  			}
+	  		}
+	  	}
+	    # muatnaik dokumen
+	  	if ($_SESSION['verifiedOK'] == 1) {
+	      	# semak file baharu ada dipilih atau tidak
+	  		// fnPreUploadFilesRename();
+	  		$_SESSION['touploadOK'] = 1;
+	  		if ($_SESSION['touploadOK'] == 1) {
+	        # padam fail sedia ada yg berkaitan dengan kod_dok berkenaan
+	  			/* Delete files previously saved under the same id */
+	  			/*
+	  			$kod_dok_to_be_updated = $_SESSION['kod_dok_to_be_updated'];
+	  			foreach(glob("../papers/*"."$kod_dok_to_be_updated"."*.*") as $f) {
+	  				// fnRunAlert($f);
+	  				$sample = "../papers/*"."$kod_dok_to_be_updated"."*.*";
+	  				// fnRunAlert($sample);
+	  				if( $f == "../papers/*"."$kod_dok_to_be_updated"."*.*") continue;
+	  				unlink($f);
+	  			}
+		        # baru boleh upload file
+		        $_SESSION['uploadOk'] = 0; // Assign initial value to 'uploadOk'
+		        // fnUploadFilesUpdateDoc(); // the altered original version (the working one! 20161018)
+		        if ($_SESSION['slot01_OK'] == 1) {
+		          	fnUploadFilesUpdateDoc("nama_dok"); // the altered original version (the working one! 20161018)
+		          	// fnRunAlert("Dah upload slot01");
+		      	}
+				if ($_SESSION['slot02_OK'] == 1) {
+					fnUploadFilesUpdateDoc("nama_dok_01");
+				  	// fnRunAlert("Dah upload slot02");
+				}
+				if ($_SESSION['slot03_OK'] == 1) {
+					fnUploadFilesUpdateDoc("nama_dok_02");
+				  	// fnRunAlert("Dah upload slot03");
+				}
+				if ($_SESSION['slot04_OK'] == 1) {
+					fnUploadFilesUpdateDoc("nama_dok_03");
+				  	// fnRunAlert("Dah upload slot04");
+				}
+	  			*/
+	  			$_SESSION['uploadOk'] = 1;
+			}	
+			else {
+				$_SESSION['uploadOk'] = 1;
+			}
+		}
+	    # if file is uploaded, save record
+		if ($_SESSION['verifiedOK'] == 1 AND $_SESSION['uploadOk'] == 1) {
+			fnUpdateCheckedTeras($DBServer,$DBUser,$DBPass,$DBName);
+			fnUpdateDocNoUpload($DBServer,$DBUser,$DBPass,$DBName);
+			// fnRunAlert("Rekod BERJAYA dikemaskini.");
+			# kosongkan sessions
+			// fnClearSessionNewDoc();
+			$_SESSION['updateDocOK'] = 1;
+		}
+	    # jika fail tidak dapat dimuatnaik, input akan dipaparkan semula
+		elseif ($_SESSION['verifiedOK'] == 0 OR $_SESSION['uploadOk'] == 0) {
+			fnRunAlert("Rekod TIDAK dikemaskini.");
+			$_SESSION['updateDocOK'] = 0;
+		}
+	}
+}
+
+/* bila pengguna ketik pada butang kemas kini DAN MUAT NAIK dalam BORANG KEMAS KINI */
+if (isset($_POST['btn_simpan_dok_muatnaik'])) {
 	// fnRunAlert("Dah ketik butang Kemas Kini!");
 	fnClearSessionNewDoc();
 	# use $_SESSION['kod_dok_untuk_dikemaskini'] for this doc's id
@@ -853,8 +1117,43 @@ else {
 							<div class="form-group">
 								<label class="control-label col-md-3 col-sm-3 col-xs-12" for="cl_tahun_dokumen">Tahun Dokumen <span class="required" hidden>*</span>
 								</label>
-								<div class="col-md-6 col-sm-6 col-xs-12">
-								<input value="" type="text" id="cl_tahun_dokumen" name="cl_tahun_dokumen" class="form-control col-md-7 col-xs-12" maxlength="4" pattern="\d{1,4}">
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<?php /*<input value="" type="text" id="cl_tahun_dokumen" name="cl_tahun_dokumen" class="form-control col-md-7 col-xs-12" maxlength="4" pattern="\d{1,4}">*/ ?>
+									<select class="form-control col-md-7 col-xs-12" id="cl_tahun_dokumen" name="cl_tahun_dokumen">
+										<option value="">Sila pilih...</option>
+										<?php  
+										$tahunTerawal = 1900;
+										$tahunSemasa = date("Y");
+										// fnRunAlert("Tahun Semasa = ".$tahunSemasa);
+										$tahunDipaparkan = $tahunTerawal;
+										while ($tahunDipaparkan <= $tahunSemasa) {
+											?>
+											<option value="<?= $tahunDipaparkan; ?>"><?= $tahunDipaparkan; ?></option>
+											<?php
+											$tahunDipaparkan++;
+										}
+										?>
+									</select>								
+								</div>
+								<label class="control-label col-md-2 col-sm-2 col-xs-12" for="cl_tahun_dokumen">(hingga) <span class="required" hidden>*</span>
+								</label>
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<select class="form-control col-md-7 col-xs-12" id="cl_tahun_dokumen_hingga" name="cl_tahun_dokumen_hingga">
+										<option value="">Sila pilih...</option>
+										<?php  
+										$tahunTerawal = 1900;
+										$tahunSemasa = date("Y");
+										// fnRunAlert("Tahun Semasa = ".$tahunSemasa);
+										$tahunDipaparkan = $tahunSemasa;
+										while ($tahunDipaparkan >= $tahunTerawal) {
+											?>
+											<option value="<?= $tahunDipaparkan; ?>"><?= $tahunDipaparkan; ?></option>
+											<?php
+											$tahunDipaparkan--;
+										}
+										?>
+									</select>
+									<?php /*<input value="" type="text" id="_hingga" name="cl_tahun_dokumen_hingga" class="form-control col-md-7 col-xs-12" maxlength="4" pattern="\d{1,4}">*/ ?>
 								</div>
 							</div>
 							<?php  
@@ -932,7 +1231,8 @@ else {
 			}
 			// fnRunAlert("Form yang dibuka $_SESSION[search_form_opened]");
 			// fnRunAlert("$_SESSION[bil_dok_carian_lengkap] carian lengkap");
-			if (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] > 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z") {
+			if (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] > 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z" AND $_SESSION['bil_dok_carian_lengkap'] <> "") {
+				// fnRunAlert("bil_dok_carian_lengkap = ".$_SESSION['bil_dok_carian_lengkap']);
 				// fnRunAlert($_SESSION['bil_dok_carian_lengkap']);
 				// fnRunAlert("paparkan mesej hasil carian lengkap");
 				$_SESSION['bil_dok_carian_lengkap_utk_ulang'] = $_SESSION['bil_dok_carian_lengkap'];
@@ -951,7 +1251,7 @@ else {
 				</div>
 				<?php
 			}
-			elseif (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] == 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z") {
+			elseif (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] == 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z" AND $_SESSION['bil_dok_carian_lengkap'] <> "") {
 				// fnRunAlert("paparkan mesej hasil carian lengkap");
 				?>
 				<div class="row">
@@ -994,6 +1294,7 @@ else {
 		?>
 		<div class="clearfix"></div>
 		<?php  
+		# paparan senarai rekod hasil carian mudah
 		// if (!isset($_SESSION['bil_dok_carian_mudah']) > 0 AND $_SESSION['search_form_opened'] == "simple") {
 		if (isset($_SESSION['bil_dok_carian_mudah']) AND $_SESSION['bil_dok_carian_mudah'] >= 0 AND $_SESSION['bil_dok_carian_mudah'] != "z" AND $_SESSION['search_form_opened'] == "simple") {
 			# paparkan jadual rekod hasil daripada carian mudah
@@ -1081,7 +1382,10 @@ else {
 								<div class="form-group"><!-- ini adalah di dalam borang kemaskini -->
 									<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3" align="center">
 										<!-- ini adalah di dalam borang kemaskini rekod dokumen -->
+										<!-- butang kemaskini tanpa muat naik baharu -->
 										<input type="submit" id="btn_simpan_dok_dikemaskini" name="btn_simpan_dok_dikemaskini" class="btn btn-success" title="Kemas Kini Data" value="Kemas Kini">
+										<!-- butang kemaskini dengan muat naik baharu -->
+										<input type="submit" id="btn_simpan_dok_muatnaik" name="btn_simpan_dok_muatnaik" class="btn btn-warning" title="Kemas Kini dan Muat Naik" value="Kemas Kini dan Muat Naik">
 										<input type="submit" id="btn_batal_kemaskini" name="btn_batal_kemaskini" class="btn btn-danger" title="Batal" value="Batal">
 										<?php  
 										if ($_SESSION['status_pentadbir_super']==1 OR $_SESSION['status_pentadbir_dokumen']==2) {
@@ -1143,7 +1447,8 @@ else {
 	    }
 
 		# paparan senarai dokumen hasil carian lengkap
-		if (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] >= 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z" AND $_SESSION['search_form_opened'] == "advanced") {
+		// fnRunAlert("bil_dok_carian_lengkap = ".$_SESSION['bil_dok_carian_lengkap']);
+		if (isset($_SESSION['bil_dok_carian_lengkap']) AND $_SESSION['bil_dok_carian_lengkap'] >= 0 AND $_SESSION['bil_dok_carian_lengkap'] != "z" AND $_SESSION['bil_dok_carian_lengkap'] <> "" AND $_SESSION['search_form_opened'] == "advanced") {
 			# paparkan jadual rekod hasil daripada carian lengkap
 			// fnRunAlert("paparkan hasil carian lengkap");
 			?>
@@ -1167,7 +1472,7 @@ else {
 											<th width="40">Bil</th>
 											<th width="100" hidden>Kod</th>
 											<th>Tajuk</th>
-											<th width="160">Tindakan</th>
+											<th width="200">Tindakan</th>
 										</tr>
 									</thead>
 
