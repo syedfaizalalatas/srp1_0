@@ -8,6 +8,11 @@ Notice: Undefined index: s in /Users/Salbiyah/Sites/srp1_0d/views/docsmgmt/listd
 
 */
 # check if this page is just loaded from the sidebar menu
+// fnRunAlert("pageSource = ".$_SESSION['pageSource']);
+if ($_SESSION['pageSource'] == 'new') {
+  $_GET['s'] = 'n';
+}
+
 // if (($_GET['s'] != 's1' AND $_GET['s'] != 's2') OR isset($_GET['s']) OR $_GET['s'] == '') {
 if (!isset($_GET['s']) AND !isset($_POST['btn_papar_perincian_dokumen'])) {
   // fnRunAlert("s = ".$_GET['s']);
