@@ -17,18 +17,18 @@
 <body class="nav-md">
     <div class="container body">
       <div class="main_container">
-       <?php include "../lay_sidebar.php"; ?>
-       <!-- top navigation -->
-       <?php include "../lay_navbar.php"; ?>
-       <!-- /top navigation -->
+        <?php include "../lay_sidebar.php"; ?>
+        <!-- top navigation -->
+        <?php include "../lay_navbar.php"; ?>
+        <!-- /top navigation -->
 
-       <!-- page content -->
-       @yield('content')
-       <!-- /page content -->
+        <!-- page content -->
+        @yield('content')
+        <!-- /page content -->
 
-       <!-- footer content -->
-       <?php include "../lay_footer.php"; ?>
-       <!-- /footer content -->
+        <!-- footer content -->
+        <?php include "../lay_footer.php"; ?>
+        <!-- /footer content -->
    </div>
 </div>
 
