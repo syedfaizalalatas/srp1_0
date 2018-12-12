@@ -21,7 +21,7 @@ $field01name = "kod_data";
 $field02name = "nama_data";
 
 # when search page is opened from the menu
-fnRunAlert("pageSource = ".$_SESSION['pageSource']);
+// fnRunAlert("pageSource = ".$_SESSION['pageSource']);
 if ($_SESSION['pageSource'] == 'new') {
   $_GET['s'] = 'n';
 }
