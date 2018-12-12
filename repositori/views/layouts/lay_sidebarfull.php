@@ -57,7 +57,7 @@
                           ?>
                           <li><a href="../docsmgmt/newdoc_v2.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen</a></li><?php // <!-- s=n (source=new) --> ?>
                           <li><a href="../docsmgmt/listdoc_o.php"><i class="fa fa-table"></i>Senarai Dokumen</a></li>
-                          <li><a href="../docsmgmt/searchdoc.php"><i class="fa fa-search"></i>Carian Dokumen</a></li>
+                          <li><a href="../docsmgmt/searchdoc_o.php"><i class="fa fa-search"></i>Carian Dokumen</a></li>
                           <li><a href="../docsmgmt/reportsearchdoc.php"><i class="fa fa-file-alt"></i>Laporan Dokumen</a></li>
                           <li><a><i class="fa fa-bar-chart"></i>Statistik Dokumen<span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
