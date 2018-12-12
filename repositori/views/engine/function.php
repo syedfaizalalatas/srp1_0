@@ -2153,7 +2153,114 @@ function fnCompareNewPasswords(){
     }
 }
 
-function fnUpdateDoc($a,$b,$c,$d){
+function fnUpdateDocNoUpload($a,$b,$c,$d){
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
+
+    $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+
+    /* an example
+        $product_name = '52 inch TV';
+        $product_code = '9879798';
+        $find_id = 1;
+
+        $statement = $mysqli->prepare("UPDATE products SET product_name=?, product_code=? WHERE ID=?");
+
+        //bind parameters for markers, where (s = string, i = integer, d = double,  b = blob)
+        $statement->bind_param('ssi', $product_name, $product_code, $find_id);
+        $results =  $statement->execute();
+        if($results){
+            print 'Success! record updated'; 
+        }else{
+            print 'Error : ('. $mysqli->errno .') '. $mysqli->error;
+        }
+    */
+
+    // check connection
+    if ($conn->connect_error) {
+        trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+    }
+
+    if ($_SESSION['touploadOK'] == 1) {
+        $kod_dok_selected = $_SESSION['kod_dok_to_be_updated'];
+        $sql="UPDATE dokumen SET tajuk_dok=?, bil_dok=?, tahun_dok=?, des_dok=?, kod_kat=?, kod_sektor=?, kod_bah=?, kod_kem=?, kod_jab=?, kod_status=?, id_pengemaskini=?, tarikh_wujud=?, tarikh_dok=?, nama_dok_asal=?, nama_dok_disimpan=?, tarikh_kemaskini=?, tarikh_mansuh=?, tarikh_pinda=?, tarikh_serah=?, kod_jab_asal=?, kod_jab_baharu=?, tag_dokumen=?, tajuk_dok_asal=?, tajuk_dok_baharu=?, catatan_dokumen=? WHERE kod_dok=?";
+
+        /* Prepare statement */
+        $stmt = $conn->prepare($sql);
+        if($stmt === false) {
+            trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+        }
+
+        /* Bind parameters. TYpes: s = string, i = integer, d = double,  b = blob */
+        $stmt->bind_param('siisiiiiiiissssssssiissssi',$_SESSION['tajuk_dok'],$_SESSION['bil_dok'],$_SESSION['tahun_dok'],$_SESSION['des_dok'],$_SESSION['kod_kat'],$_SESSION['kod_sektor'],$_SESSION['kod_bah'],$_SESSION['kod_kem'],$_SESSION['kod_jab'],$_SESSION['kod_status'],$_SESSION['id_pengemaskini'],$_SESSION['tarikh_wujud'],$_SESSION['tarikh_dok'],$_SESSION['nama_fail_asal'],$_SESSION['nama_fail_disimpan'],$_SESSION['tarikh_kemaskini'],$_SESSION['tarikh_mansuh'],$_SESSION['tarikh_pinda'],$_SESSION['tarikh_serah'],$_SESSION['kod_jab_asal'],$_SESSION['kod_jab_baharu'],$_SESSION['tag_dokumen'],$_SESSION['tajuk_dok_asal'],$_SESSION['tajuk_dok_baharu'],$_SESSION['catatan_dokumen'],$_SESSION['kod_dok_to_be_updated']);
+        if ($stmt) {
+            // fnRunAlert("data dgn lampiran direkod ke db");
+        }
+    }
+    else {
+        $kod_dok_selected = $_SESSION['kod_dok_to_be_updated'];
+        $sql="UPDATE dokumen SET tajuk_dok=?, bil_dok=?, tahun_dok=?, des_dok=?, kod_kat=?, kod_sektor=?, kod_bah=?, kod_kem=?, kod_jab=?, kod_status=?, id_pengemaskini=?, tarikh_wujud=?, tarikh_dok=?, tarikh_kemaskini=?, tarikh_mansuh=?, tarikh_pinda=?, tarikh_serah=?, kod_jab_asal=?, kod_jab_baharu=?, tag_dokumen=?, tajuk_dok_asal=?, tajuk_dok_baharu=? WHERE kod_dok=?";
+
+        /* Prepare statement */
+        $stmt = $conn->prepare($sql);
+        // fnRunAlert("$stmt");
+        if($stmt === false) {
+            trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+        }
+
+        /* Bind parameters. TYpes: s = string, i = integer, d = double,  b = blob */
+        $stmt->bind_param('siisiiiiiiissssssiisssi',$_SESSION['tajuk_dok'],$_SESSION['bil_dok'],$_SESSION['tahun_dok'],$_SESSION['des_dok'],$_SESSION['kod_kat'],$_SESSION['kod_sektor'],$_SESSION['kod_bah'],$_SESSION['kod_kem'],$_SESSION['kod_jab'],$_SESSION['kod_status'],$_SESSION['id_pengemaskini'],$_SESSION['tarikh_wujud'],$_SESSION['tarikh_dok'],$_SESSION['tarikh_kemaskini'],$_SESSION['tarikh_mansuh'],$_SESSION['tarikh_pinda'],$_SESSION['tarikh_serah'],$_SESSION['kod_jab_asal'],$_SESSION['kod_jab_baharu'],$_SESSION['tag_dokumen'],$_SESSION['tajuk_dok_asal'],$_SESSION['tajuk_dok_baharu'],$_SESSION['kod_dok_to_be_updated']);
+        // siisiiiissssssiisss
+        if ($stmt) {
+            // fnRunAlert("data tanpa lampiran direkod ke db");
+            // fnRunAlert("$stmt");
+        }
+    }
+
+    /* Execute statement */
+    $stmt->execute();
+
+    if ($stmt) {
+        # clear dok sokongan untuk rekod ni dulu, kalau ada dok sokongan baharu hendak dimuat naik
+        /*
+        if ($_SESSION['bilDokSokUtkMuatNaik']>0) {
+            $delDokSokonganSql = "DELETE FROM dok_sokongan WHERE kod_dok_fk = '$kod_dok_selected'";
+        }
+        $delDokSokonganResult = $conn->query($delDokSokonganSql);
+        if ($_SESSION['slot01_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot01 berjaya direkod ke db.";
+            fnUpdateDokSokongan($_SESSION['nama_dok_asal_slot01'], $_SESSION['nama_dok_disimpan_slot01'], $kod_dok_selected);
+            // fnInsertDokSokongan("$_SESSION[nama_dok_asal_slot01]", "$_SESSION[nama_dok_disimpan_slot01]");
+            // fnRunAlert("Ni selepas insert dok sokongan slot01.");
+        }
+        if ($_SESSION['slot02_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot02 berjaya direkod ke db.";
+            fnUpdateDokSokongan($_SESSION['nama_dok_asal_slot02'], $_SESSION['nama_dok_disimpan_slot02'], $kod_dok_selected);
+        }
+        if ($_SESSION['slot03_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot03 berjaya direkod ke db.";
+            fnUpdateDokSokongan($_SESSION['nama_dok_asal_slot03'], $_SESSION['nama_dok_disimpan_slot03'], $kod_dok_selected);
+        }
+        if ($_SESSION['slot04_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot04 berjaya direkod ke db.";
+            fnUpdateDokSokongan($_SESSION['nama_dok_asal_slot04'], $_SESSION['nama_dok_disimpan_slot04'], $kod_dok_selected);
+        }
+        $_SESSION['mesejBerjaya'] = ""; #kosongkan mesej berjaya
+        */
+        fnRunAlert("Rekod BERJAYA dikemaskini.");
+    }
+    else {
+        echo "ERROR";
+    }
+
+    $stmt->close();
+    $conn->close();
+    fnClearSessionListDoc();
+}
+
+function fnUpdateDoc_bak20181213($a,$b,$c,$d){
     $DBServer       = $_SESSION['DBServer'];
     $DBUser         = $_SESSION['DBUser'];
     $DBPass         = $_SESSION['DBPass'];
@@ -6488,8 +6595,8 @@ function fnShowDocTableContentForAdvancedSearch($a,$b,$c,$d){
                 <tr><!-- senarai dalam carian lengkap -->
                     <td><?php echo $counter ?></td>
                     <td hidden><?php echo $row[$field01name] ?></td>
-                    <td><?php echo stripslashes(strtoupper($row['tajuk_dok'])) ?> <?php echo $perkataanBil ?> <?php echo $bilDok ?><?php echo $strokeBil ?><?php echo $row['tahun_dok'] ?></td>
-                    <td style='align-content: center;' align='center'>
+                    <td colspan="2"><?php echo stripslashes(strtoupper($row['tajuk_dok'])) ?> <?php echo $perkataanBil ?> <?php echo $bilDok ?><?php echo $strokeBil ?><?php echo $row['tahun_dok'] ?></td>
+                    <td hidden style='align-content: center;' align='center'>
                         <button type='submit' id='btn_papar_borang_kemaskini' name='btn_papar_borang_kemaskini' class='btn btn-success' title='Kemaskini' value='<?php echo $row['kod_dok'] ?>'><i class='fa fa-edit'></i></button>
                         <button hidden type='submit' id='btn_papar_perincian_dokumen' name='btn_papar_perincian_dokumen' class='btn btn-success' title='Papar' value='<?php echo $row['kod_dok'] ?>'><i class='fa fa-eye'></i></button>
                         <?php 
@@ -6545,7 +6652,7 @@ function fnShowDocTableContentForAdvancedSearch($a,$b,$c,$d){
                 ?>
                 <tr>
                     <td colspan="4">
-                        <strong><small>Tajuk: </small></strong><?php echo stripslashes(strtoupper($row['tajuk_dok'])) ?><br/>
+                        <?php /*<strong><small>Tajuk: </small></strong><?php echo stripslashes(strtoupper($row['tajuk_dok'])) ?><br/>*/ ?>
                         <strong><small>Kategori: </small></strong><?php echo stripslashes(strtoupper($row_detail_dok['nama_kat'])) ?><br/>
                         <strong><small>Bil. Dokumen: </small></strong><?php echo $bilDok ?><?php echo $strokeBil ?><?php echo $row['tahun_dok'] ?><br/>
                         <strong><small>Tarikh Berkuatkuasa: </small></strong><?php echo $tarikh_wujud_rekod; ?><br/>
@@ -8601,7 +8708,7 @@ function fnShowUpdateDocFormContentForSearch(){
                       </div>
                     </div>
 
-                    <div class="form-group">
+                    <div hidden class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama_dok">Muatnaik Dokumen <span class="required">*</span>
                       </label>
                       <!-- tak kisah, brp banyak dah ada, boleh upload lg 4. yg baharu akan overwrite yg lama -->
@@ -9291,6 +9398,7 @@ function fnSearchDocAdvancedRepeat(){
     ## dapatkan input
     $cl_tajuk_dokumen = $_SESSION['cl_tajuk_dokumen_to_show_below_view'];
     $cl_tahun_dokumen = $_SESSION['cl_tahun_dokumen_to_show_below_view'];
+    // fnRunAlert("cl_tahun_dokumen = ".$cl_tahun_dokumen);
     $cl_tahun_dokumen_hingga = $_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'];
     $kod_kat        = $_SESSION['kod_kat_to_show_below_view'];
     $kod_sektor     = $_SESSION['kod_sektor_to_show_below_view'];
@@ -9651,6 +9759,396 @@ function fnSearchDocAdvancedRepeat(){
 }
 
 function fnSearchDocAdvanced(){
+    // fnRunAlert("Tanda 1");
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
+    # kosongkan mesej bil hasil carian
+    $_SESSION['bil_dok_carian_lengkap'] = "";
+    unset($_SESSION['bil_dok_carian_lengkap']);
+    # sambung ke db
+    $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+    # semak sambungan
+    if ($conn->connect_error) {
+        trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+    }
+    # sediakan pernyataan sql
+    ## dapatkan input
+    $cl_tajuk_dokumen = $_SESSION['cl_tajuk_dokumen'];
+    if ($_SESSION['cl_tahun_dokumen'] == "" AND $_SESSION['cl_tahun_dokumen_hingga'] <> "") {
+        $cl_tahun_dokumen = $_SESSION['cl_tahun_dokumen_hingga'];
+    }
+    else {
+        $cl_tahun_dokumen = $_SESSION['cl_tahun_dokumen'];
+    }
+    if ($_SESSION['cl_tahun_dokumen_hingga'] == "" AND $_SESSION['cl_tajuk_dokumen'] <> "") {
+        $cl_tahun_dokumen_hingga = $_SESSION['cl_tahun_dokumen'];
+    }
+    else {
+        $cl_tahun_dokumen_hingga = $_SESSION['cl_tahun_dokumen_hingga'];
+    }
+    $kod_kat        = $_SESSION['kod_kat'];
+    $kod_sektor     = $_SESSION['kod_sektor'];
+    $kod_bah        = $_SESSION['kod_bah'];
+    $kod_status     = $_SESSION['kod_status'];
+    $kod_kem        = $_SESSION['loggedin_kod_kem'];
+    $kod_jab        = $_SESSION['loggedin_kod_jab'];
+    $sql = "";
+    $marker = 0;
+    ## dapatkan kombinasi
+    if (isset($_SESSION['kombinasi_cl_dok']) AND $_SESSION['kombinasi_cl_dok'] != "") {
+        // fnRunAlert("isset($_SESSION[kombinasi_cl_dok])");
+        // fnRunAlert("Ada kombinasi");
+        // fnRunAlert("comb fwd=$_SESSION[kombinasi_cl_dok]");
+    }
+    else {
+        // fnRunAlert("Tiada kombinasi");
+    }
+        ## pilih sql ikut kombinasi
+        # 000001
+        if ($_SESSION['kombinasi_cl_dok'] === 1) {
+            $sql = "SELECT * FROM dokumen WHERE kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 1;
+        }
+        # 000010
+        elseif ($_SESSION['kombinasi_cl_dok'] === 2) {
+            $sql = "SELECT * FROM dokumen WHERE kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 2;
+        }
+        # 000011
+        elseif ($_SESSION['kombinasi_cl_dok'] === 3) {
+            $sql = "SELECT * FROM dokumen WHERE kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 3;
+        }
+        # 000100
+        elseif ($_SESSION['kombinasi_cl_dok'] === 4) {
+            $sql = "SELECT * FROM dokumen WHERE kod_sektor = '$kod_sektor' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 4;
+        }
+        # 000101
+        elseif ($_SESSION['kombinasi_cl_dok'] === 5) {
+            $sql = "SELECT * FROM dokumen WHERE kod_sektor = '$kod_sektor' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 5;
+        }
+        # 000110
+        elseif ($_SESSION['kombinasi_cl_dok'] === 6) {
+            $sql = "SELECT * FROM dokumen WHERE kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 6;
+        }
+        # 000111
+        elseif ($_SESSION['kombinasi_cl_dok'] === 7) {
+            $sql = "SELECT * FROM dokumen WHERE kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 7;
+        }
+        # 001000
+        elseif ($_SESSION['kombinasi_cl_dok'] === 8) {
+            $sql = "SELECT * FROM dokumen WHERE kod_kat = '$kod_kat' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 8;
+        }
+        # 001001
+        elseif ($_SESSION['kombinasi_cl_dok'] === 9) {
+            $sql = "SELECT * FROM dokumen WHERE kod_kat = '$kod_kat' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 9;
+        }
+        # 001010
+        elseif ($_SESSION['kombinasi_cl_dok'] === 10) {
+            $sql = "SELECT * FROM dokumen WHERE kod_kat = '$kod_kat' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 10;
+        }
+        # 001011
+        elseif ($_SESSION['kombinasi_cl_dok'] === 11) {
+            $sql = "SELECT * FROM dokumen WHERE kod_kat = '$kod_kat' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 11;
+        }
+        # 001100
+        elseif ($_SESSION['kombinasi_cl_dok'] === 12) {
+            $sql = "SELECT * FROM dokumen WHERE kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 12;
+        }
+        # 001101
+        elseif ($_SESSION['kombinasi_cl_dok'] === 13) {
+            $sql = "SELECT * FROM dokumen WHERE kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 13;
+        }
+        # 001110
+        elseif ($_SESSION['kombinasi_cl_dok'] === 14) {
+            $sql = "SELECT * FROM dokumen WHERE kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 14;
+        }
+        # 001111
+        elseif ($_SESSION['kombinasi_cl_dok'] === 15) {
+            $sql = "SELECT * FROM dokumen WHERE kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 15;
+        }
+        # 010000
+        elseif ($_SESSION['kombinasi_cl_dok'] === 16) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 16;
+        }
+        # 010001
+        elseif ($_SESSION['kombinasi_cl_dok'] === 17) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 17;
+        }
+        # 010010
+        elseif ($_SESSION['kombinasi_cl_dok'] === 18) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 18;
+        }
+        # 010011
+        elseif ($_SESSION['kombinasi_cl_dok'] === 19) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 19;
+        }
+        # 010100
+        elseif ($_SESSION['kombinasi_cl_dok'] === 20) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_sektor = '$kod_sektor' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 20;
+        }
+        # 010101
+        elseif ($_SESSION['kombinasi_cl_dok'] === 21) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_sektor = '$kod_sektor' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 21;
+        }
+        # 010110
+        elseif ($_SESSION['kombinasi_cl_dok'] === 22) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 22;
+        }
+        # 010111
+        elseif ($_SESSION['kombinasi_cl_dok'] === 23) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 23;
+        }
+        # 011000
+        elseif ($_SESSION['kombinasi_cl_dok'] === 24) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 24;
+        }
+        # 011001
+        elseif ($_SESSION['kombinasi_cl_dok'] === 25) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 25;
+        }
+        # 011010
+        elseif ($_SESSION['kombinasi_cl_dok'] === 26) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 26;
+        }
+        # 011011
+        elseif ($_SESSION['kombinasi_cl_dok'] === 27) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 27;
+        }
+        # 011100
+        elseif ($_SESSION['kombinasi_cl_dok'] === 28) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 28;
+        }
+        # 011101
+        elseif ($_SESSION['kombinasi_cl_dok'] === 29) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 29;
+        }
+        # 011110
+        elseif ($_SESSION['kombinasi_cl_dok'] === 30) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 30;
+        }
+        # 011111
+        elseif ($_SESSION['kombinasi_cl_dok'] === 31) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 31;
+        }
+        # 100000
+        elseif ($_SESSION['kombinasi_cl_dok'] === 32) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 32;
+        }
+        # 100001
+        elseif ($_SESSION['kombinasi_cl_dok'] === 33) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 33;
+        }
+        # 100010
+        elseif ($_SESSION['kombinasi_cl_dok'] === 34) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 34;
+        }
+        # 100011
+        elseif ($_SESSION['kombinasi_cl_dok'] === 35) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 35;
+        }
+        # 100100
+        elseif ($_SESSION['kombinasi_cl_dok'] === 36) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_sektor = '$kod_sektor' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 36;
+        }
+        # 100101
+        elseif ($_SESSION['kombinasi_cl_dok'] === 37) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_sektor = '$kod_sektor' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 37;
+        }
+        # 100110
+        elseif ($_SESSION['kombinasi_cl_dok'] === 38) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 38;
+        }
+        # 100111
+        elseif ($_SESSION['kombinasi_cl_dok'] === 39) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 39;
+        }
+        # 101000
+        elseif ($_SESSION['kombinasi_cl_dok'] === 40) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_kat = '$kod_kat' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 40;
+        }
+        # 101001
+        elseif ($_SESSION['kombinasi_cl_dok'] === 41) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_kat = '$kod_kat' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 41;
+        }
+        # 101010
+        elseif ($_SESSION['kombinasi_cl_dok'] === 42) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_kat = '$kod_kat' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 42;
+        }
+        # 101011
+        elseif ($_SESSION['kombinasi_cl_dok'] === 43) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_kat = '$kod_kat' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 43;
+        }
+        # 101100
+        elseif ($_SESSION['kombinasi_cl_dok'] === 44) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 44;
+        }
+        # 101101
+        elseif ($_SESSION['kombinasi_cl_dok'] === 45) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 45;
+        }
+        # 101110
+        elseif ($_SESSION['kombinasi_cl_dok'] === 46) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 46;
+        }
+        # 101111
+        elseif ($_SESSION['kombinasi_cl_dok'] === 47) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 47;
+        }
+        # 110000
+        elseif ($_SESSION['kombinasi_cl_dok'] === 48) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 48;
+        }
+        # 110001
+        elseif ($_SESSION['kombinasi_cl_dok'] === 49) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 49;
+        }
+        # 110010
+        elseif ($_SESSION['kombinasi_cl_dok'] === 50) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 50;
+        }
+        # 110011
+        elseif ($_SESSION['kombinasi_cl_dok'] === 51) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%' AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 51;
+        }
+        # 110100
+        elseif ($_SESSION['kombinasi_cl_dok'] === 52) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_sektor = '$kod_sektor' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 52;
+        }
+        # 110101
+        elseif ($_SESSION['kombinasi_cl_dok'] === 53) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_sektor = '$kod_sektor' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 53;
+        }
+        # 110110
+        elseif ($_SESSION['kombinasi_cl_dok'] === 54) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 54;
+        }
+        # 110111
+        elseif ($_SESSION['kombinasi_cl_dok'] === 55) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%' AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 55;
+        }
+        # 111000
+        elseif ($_SESSION['kombinasi_cl_dok'] === 56) {        
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 56;
+        }
+        # 111001
+        elseif ($_SESSION['kombinasi_cl_dok'] === 57) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 57;
+        }
+        # 111010
+        elseif ($_SESSION['kombinasi_cl_dok'] === 58) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 58;
+        }
+        # 111011        
+        elseif ($_SESSION['kombinasi_cl_dok'] === 59) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 59;
+        }
+        # 111100
+        elseif ($_SESSION['kombinasi_cl_dok'] === 60) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 60;
+        }
+        # 111101
+        elseif ($_SESSION['kombinasi_cl_dok'] === 61) {
+            $sql = "SELECT * FROM dokumen WHERE (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 61;
+        }
+        # 111110
+        elseif ($_SESSION['kombinasi_cl_dok'] === 62) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%' AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 62;
+        }
+        # 111111
+        elseif ($_SESSION['kombinasi_cl_dok'] === 63) {
+            $sql = "SELECT * FROM dokumen WHERE tajuk_dok LIKE '%$cl_tajuk_dokumen%' OR des_dok LIKE '%$cl_tajuk_dokumen%'  AND (tahun_dok >= $cl_tahun_dokumen) AND (tahun_dok <= $cl_tahun_dokumen_hingga) AND kod_kat = '$kod_kat' AND kod_sektor = '$kod_sektor' AND kod_bah = '$kod_bah' AND kod_status = '$kod_status' AND kod_kem = '$kod_kem' AND kod_jab = '$kod_jab' AND tanda_hapus<>0 AND bil_dok<>0";
+            $marker = 63;
+        }
+    # larikan pernyataan
+    // fnRunAlert("Tanda 2: Kombinasi = ".$_SESSION['kombinasi_cl_dok']);
+    $_SESSION['sqlforadvanceddocsearch'] = "";
+    if (isset($sql)) {
+        $rs=$conn->query($sql);
+        $_SESSION['sqlforadvanceddocsearch'] = $sql;
+        // fnRunAlert("sql comb=$sql");
+        // fnRunAlert("marker comb=$marker");
+        # jika $rs benar, kira rekod yang berpadanan
+        if($rs === false) {
+            trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+        } 
+        else {
+            $rows_returned = $rs->num_rows;
+            // fnRunAlert("Tanda 3: Bil. Rekod = ".$rows_returned);
+            $_SESSION['bil_dok_carian_lengkap'] = $rows_returned;
+            // fnRunAlert("$_SESSION[bil_dok_carian_lengkap] bil hasil carian lengkap di function.php");
+            // fnRunAlert("bil hasil comb=$_SESSION[bil_dok_carian_lengkap]");
+        }
+    }
+    elseif (!isset($sql)) {
+        $_SESSION['bil_dok_carian_lengkap'] = 0;
+        fnRunAlert("sql0=$sql");
+        // fnRunAlert("bil hasil0=$_SESSION[bil_dok_carian_lengkap]");
+    }
+}
+
+function fnSearchDocAdvanced_bak20181212(){
     $DBServer       = $_SESSION['DBServer'];
     $DBUser         = $_SESSION['DBUser'];
     $DBPass         = $_SESSION['DBPass'];
@@ -9668,6 +10166,7 @@ function fnSearchDocAdvanced(){
     ## dapatkan input
     $cl_tajuk_dokumen = $_SESSION['cl_tajuk_dokumen'];
     $cl_tahun_dokumen = $_SESSION['cl_tahun_dokumen'];
+    $cl_tahun_dokumen_hingga = $_SESSION['cl_tahun_dokumen_hingga'];
     $kod_kat        = $_SESSION['kod_kat'];
     $kod_sektor     = $_SESSION['kod_sektor'];
     $kod_bah        = $_SESSION['kod_bah'];
@@ -10701,7 +11200,7 @@ function fnClearAdvancedDocSearchSessions(){
     $_SESSION['kod_sektor'] = 1;
     $_SESSION['kod_bah'] = 1;
     $_SESSION['kod_status'] = 1;
-    $_SESSION['bil_dok_carian_lengkap'] = "z";
+    // $_SESSION['bil_dok_carian_lengkap'] = "z";
 }
 
 function fnClearSimpleDocSearchResult(){
