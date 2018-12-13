@@ -471,8 +471,8 @@ if (isset($_POST['btn_selesai_muatnaik'])) {
                 <div class="form-group">
                   <div class="col-md-8 col-sm-8 col-xs-12 col-md-offset-2">
                     <input type="submit" class="btn btn-success" id="btn_simpan_dok_sokongan_baharu" name="btn_simpan_dok_sokongan_baharu" title="Muat Naik & Muat Naik Lagi" value="Muat Naik & Teruskan">
-                    <input type="submit" class="btn btn-warning" id="btn_simpan_dok_sokongan_baharu" name="btn_simpan_dok_sokongan_baharu_akhir" title="Muat Naik & Selesai" value="Muat Naik & Selesai">
-                    <input type="submit" class="btn btn-danger" id="btn_simpan_dok_sokongan_baharu" name="btn_selesai_muatnaik" title="Selesai Muat Naik & Kembali ke Borang Daftar Dokumen Baharu" value="Keluar">
+                    <input type="submit" class="btn btn-warning" id="btn_simpan_dok_sokongan_baharu_akhir" name="btn_simpan_dok_sokongan_baharu_akhir" title="Muat Naik & Selesai" value="Muat Naik & Selesai">
+                    <input type="submit" class="btn btn-danger" id="btn_selesai_muatnaik" name="btn_selesai_muatnaik" title="Selesai Muat Naik & Kembali ke Borang Daftar Dokumen Baharu" value="Keluar">
                     <button type="reset" class="btn btn-secondary" title="Kosongkan Borang">Kosongkan</button>
                   </div>
                 </div>
@@ -561,8 +561,15 @@ if (isset($_POST['btn_selesai_muatnaik'])) {
                             $matching_file_counter++;
                           }
                         }
+                        if ($matching_file_counter == 0) {
+                          ?>
+                          <tr class="table table-striped" align="right">
+                            <th scope="row" colspan="4">Dokumen sokongan tiada dalam direktori.</th>
+                          </tr>
+                          <?php
+                        }
                       }
-                      elseif($rows_returned == 0 OR $matching_file_counter == 0) {
+                      elseif($rows_returned == 0) {
                         ?>
                         <tr class="table table-striped" align="right">
                           <th scope="row" colspan="4">Tiada dokumen sokongan telah dimuatnaik.</th>
