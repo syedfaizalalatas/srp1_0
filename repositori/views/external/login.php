@@ -6,7 +6,7 @@
 	<?php require "../engine/mysqlidbconnect.php"; ?>
 	<?php 
 	require "../engine/function.php"; 
-	fnRunAlert("Telah disambungkan ke function.php");
+	// fnRunAlert("Telah disambungkan ke function.php");
 	?>
 	<?php require "../layouts/lay_csslink.php"; ?>
 	<?php  
