@@ -26,6 +26,36 @@
             <div class="clearfix"></div>
 
             <!-- sidebar menu -->
+            <style type="text/css">
+              .btnMenus {
+                margin-bottom: 4px; 
+                color: white;
+              }
+              .btnMenus {
+                color: white;
+                text-align: center !important;
+                font-weight: 400;
+                padding: 0px 5px 0px; 
+              }
+              .btnMenusChild {
+                color: white;
+                text-align: center !important;
+                font-weight: 400;
+                font-size: 12px;
+                padding: 3px 5px 0px; 
+              }
+              .btnMenus a:hover {
+                color: #11bd9a !important;
+                text-decoration: none;
+                background: transparent; 
+              }
+              .btnMenus hover, focus {
+              }
+              .btn-link:hover {
+                color: #11bd9a !important;
+                text-decoration: none;
+              }
+            </style>
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
                 <?php // <!-- <h3>Dokumen</h3> --> ?>
@@ -34,7 +64,9 @@
                   ?>
                   <ul class="nav side-menu">
                     <li>
-                      <a href="../sysmgmt/dashboard.php"><i class="fa fa-home"></i> Utama <?php // <!-- <span class="fa fa-chevron-down"></span> --> ?></a>
+                      <a href="../sysmgmt/dashboard.php"><i class="fa fa-home"></i><input type="button" class="btn btn-link btnMenus" id="btn_sidebar_utama" value="Utama"></a>
+                      <?php  
+                      ?>
                       <?php  
                       /*
                       <!-- <ul class="nav child_menu"> -->
@@ -55,18 +87,18 @@
                           <li><a href="../docsmgmt/searchdoc_o.php?s=n"><i class="fa fa-search"></i>Carian Dokumen Asal</a></li>
                           */
                           ?>
-                          <li><a href="../docsmgmt/newdoc_v2.php"><i class="fa fa-edit"></i>Pendaftaran Dokumen</a></li><?php // <!-- s=n (source=new) --> ?>
-                          <li><a href="../docsmgmt/listdoc_o.php"><i class="fa fa-table"></i>Senarai Dokumen</a></li>
-                          <li><a href="../docsmgmt/searchdoc_o.php"><i class="fa fa-search"></i>Carian Dokumen</a></li>
-                          <li><a href="../docsmgmt/reportsearchdoc.php"><i class="fa fa-file-alt"></i>Laporan Dokumen</a></li>
+                          <li><a href="../docsmgmt/newdoc_v2.php"><i class="fa fa-edit"></i><button onclick="jsfnSidemenuClick()" type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Pendaftaran Dokumen">Pendaftaran Dokumen</button></a></li><?php // <!-- s=n (source=new) --> ?>
+                          <li><a href="../docsmgmt/listdoc_o.php"><i class="fa fa-table"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Senarai Dokumen"></a></li>
+                          <li><a href="../docsmgmt/searchdoc_o.php"><i class="fa fa-search"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Carian Dokumen"></a></li>
+                          <li><a href="../docsmgmt/reportsearchdoc.php"><i class="fa fa-file-alt"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Laporan Dokumen"></a></li>
                           <li><a><i class="fa fa-bar-chart"></i>Statistik Dokumen<span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
                               <?php // <!-- <li><a href="../docsmgmt/docreport_all.php?s=n">Keseluruhan Dokumen</a></li> --> ?>
-                              <li><a href="../docsmgmt/docreport_cat.php">Statistik Kategori</a></li><?php // <!-- remove ?s=n untuk mengekalkan chevron open --> ?>
-                              <li><a href="../docsmgmt/docreport_div.php">Statistik Bahagian</a></li>
-                              <li><a href="../docsmgmt/docreport_sec.php">Statistik Sektor</a></li>
-                              <li><a href="../docsmgmt/docreport_stat.php">Statistik Status</a></li>
-                              <li><a href="../docsmgmt/docreport_year.php">Statistik Tahun</a></li>
+                              <li><a href="../docsmgmt/docreport_cat.php"><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Statistik Kategori"></a></li><?php // <!-- remove ?s=n untuk mengekalkan chevron open --> ?>
+                              <li><a href="../docsmgmt/docreport_div.php"><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Statistik Bahagian"></a></li>
+                              <li><a href="../docsmgmt/docreport_sec.php"><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Statistik Sektor"></a></li>
+                              <li><a href="../docsmgmt/docreport_stat.php"><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Statistik Status"></a></li>
+                              <li><a href="../docsmgmt/docreport_year.php"><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Statistik Tahun"></a></li>
                             </ul>
                           </li>
                         </ul>
@@ -79,8 +111,8 @@
                       ?>
                       <li><a><i class="fa fa-users"></i> Pentadbir <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                          <li><a href="../usersmgmt/newuser.php"><i class="fa fa-edit"></i>Pendaftaran Pentadbir</a></li>
-                          <li><a href="../usersmgmt/listuser.php"><i class="fa fa-table"></i>Senarai Pentadbir</a></li>
+                          <li><a href="../usersmgmt/newuser.php"><i class="fa fa-edit"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Pendaftaran Pentadbir"></a></li>
+                          <li><a href="../usersmgmt/listuser.php"><i class="fa fa-table"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Senarai Pentadbir"></a></li>
                         </ul>
                       </li>
                       <?php
@@ -91,17 +123,17 @@
                       ?>
                       <li><a><i class="fa fa-gear"></i> Sistem <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                          <li><a href="../sysmgmt/categorymgmt.php"><i class="fa fa-table"></i>Kategori Dokumen</a></li>
-                          <li><a href="../sysmgmt/ministrymgmt.php"><i class="fa fa-table"></i>Kementerian</a></li>
-                          <li><a href="../sysmgmt/agencymgmt.php"><i class="fa fa-table"></i>Jabatan / Agensi</a></li>
-                          <li><a href="../sysmgmt/divisionmgmt.php"><i class="fa fa-table"></i>Bahagian</a></li>
-                          <li><a href="../sysmgmt/docstatusmgmt.php"><i class="fa fa-table"></i>Status Dokumen</a></li>
-                          <li><a href="../sysmgmt/strategiccoremgmt.php"><i class="fa fa-table"></i>Teras Strategik</a></li>
-                          <li><a href="../sysmgmt/sectormgmt.php"><i class="fa fa-table"></i>Sektor</a></li>
-                          <!-- <li><a href="../sysmgmt/datamgmttemplate.php">Template</a></li> -->
-                          <!-- <li><a href="../sysmgmt/datamgmtcleantemplate.php">Template Clean</a></li> -->
-                          <li><a href="../sysmgmt/nametitlemgmt.php"><i class="fa fa-table"></i>Gelaran Nama</a></li>
-                          <!-- <li><a href="../sysmgmt/testfilename.php"><i class="fa fa-table"></i>Test Filename</a></li> -->
+                          <li><a href="../sysmgmt/categorymgmt.php"><i class="fa fa-table"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Kategori Dokumen"></a></li>
+                          <li><a href="../sysmgmt/ministrymgmt.php"><i class="fa fa-table"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Kementerian"></a></li>
+                          <li><a href="../sysmgmt/agencymgmt.php"><i class="fa fa-table"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Jabatan / Agensi"></a></li>
+                          <li><a href="../sysmgmt/divisionmgmt.php"><i class="fa fa-table"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Bahagian"></a></li>
+                          <li><a href="../sysmgmt/docstatusmgmt.php"><i class="fa fa-table"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Status Dokumen"></a></li>
+                          <li><a href="../sysmgmt/strategiccoremgmt.php"><i class="fa fa-table"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Teras Strategik"></a></li>
+                          <li><a href="../sysmgmt/sectormgmt.php"><i class="fa fa-table"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Sektor"></a></li>
+                          <?php /*<!-- <li><a href="../sysmgmt/datamgmttemplate.php">Template</a></li> -->*/ ?>
+                          <?php /*<!-- <li><a href="../sysmgmt/datamgmtcleantemplate.php">Template Clean</a></li> -->*/ ?>
+                          <li><a href="../sysmgmt/nametitlemgmt.php"><i class="fa fa-table"></i><input type="button" class="btn btn-link btnMenus btnMenusChild" id="btn_sidebar_utama" value="Gelaran Nama"></a></li>
+                          <?php /*<!-- <li><a href="../sysmgmt/testfilename.php"><i class="fa fa-table"></i>Test Filename</a></li> -->*/ ?>
                         </ul>
                       </li>
                       <?php
@@ -250,3 +282,23 @@
             <!-- /menu footer buttons -->
           </div>
         </div>
+        <script type="text/javascript">
+          $(".btnMenus").click(function(event) {
+              </script>
+              <?php 
+              // fnRunAlert("hohoho"); 
+              // fnResetSessionsForPages();
+              ?>
+              <script type="text/javascript">
+          })           
+        </script>
+        <script type="text/javascript">
+          function jsfnSidemenuClick() {
+              </script>
+              <?php 
+              // fnRunAlert("hehehe"); 
+              // fnResetSessionsForPages();
+              ?>
+              <script type="text/javascript">
+          }           
+        </script>

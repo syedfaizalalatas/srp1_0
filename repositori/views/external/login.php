@@ -35,7 +35,7 @@
 		$loginname = $_POST['txt_nama'];
 		$loginpwd = $_POST['pwd_katalaluan'];
 		fnVerifyLogin($DBServer,$DBUser,$DBPass,$DBName,$loginname,$loginpwd);
-		fnRunAlert($_SESSION['loginstatus']);
+		// fnRunAlert($_SESSION['loginstatus']);
 		if ($_SESSION['loginstatus'] === 1) {
 			fnRefreshAndRedirectPgMeta("../sysmgmt/dashboard.php");
 		}

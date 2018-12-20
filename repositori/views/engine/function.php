@@ -1990,6 +1990,131 @@ function fnInsertCheckedTeras($a,$b,$c,$d){
     $conn->close();
 }
 
+function fnInsertCheckedTerasForUpdatingInSearchModule($a,$b,$c,$d){
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
+
+    $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+
+    // check connection
+    if ($conn->connect_error) {
+        trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+    }
+
+    $new_doc_id_to_search=$_SESSION['new_doc_id'];
+    // fnRunAlert("$new_doc_id_to_search");
+
+    # delete teras_dok entry for the latest new_doc_id
+    $sql_del="DELETE FROM teras_dok WHERE kod_dok = ".$_SESSION['kod_dok_to_be_updated']."";
+    $rs=$conn->query($sql_del);
+    # end delete existing teras_dok entry
+
+    # start checking for existing teras_dok entry
+    $sql='SELECT * FROM teras_dok WHERE kod_dok = '.$_SESSION['kod_dok_to_be_updated'].'';
+
+    $rs=$conn->query($sql);
+
+    if($rs === false) {
+        trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+    } else {
+        $rows_returned = $rs->num_rows;
+        $existing_teras_dok=$rows_returned;
+        // fnRunAlert("$existing_teras_dok");
+    }
+    # end checking for existing teras_dok entry
+
+
+    $sql='SELECT kod_teras, nama_teras FROM teras_strategik WHERE kod_teras != 1 AND papar_data = 1';
+
+    $rs=$conn->query($sql);
+
+    if($rs === false) {
+        trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+    } else {
+        $rows_returned = $rs->num_rows;
+        // $_SESSION['bil_teras'];
+    }
+
+    $rs=$conn->query($sql);
+
+    if($rs === false) {
+        trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+    } else {
+        $arr = $rs->fetch_all(MYSQLI_ASSOC);
+    }
+
+    # 
+    # if no teras_dok entry with the same kod_dok insert new teras
+    $teras_index = 0;
+    foreach($arr as $row) {
+        # capture teras_index
+        $_SESSION['teras_index'] = $teras_index;
+        # capture checked value (1 or 0)
+        if (!isset($_POST["teras_$teras_index"])) {
+            $_POST["teras_$teras_index"] = 0;
+        }
+        if (isset($_POST["teras_$teras_index"]) AND $_POST["teras_$teras_index"] != 0) {
+            $_SESSION['checked_value'] = 1;
+        }
+        else {
+            $_SESSION['checked_value'] = 0;
+        }
+        # capture kod_teras
+        $_SESSION['kod_teras'] = $row['kod_teras'];
+        # capture kod_dok
+        # $_SESSION['new_doc_id'] - generated in fnUploadFilesRename
+
+        if ($existing_teras_dok==0) {
+            # code...
+            $sql='INSERT INTO teras_dok (teras_index, checked_value, kod_teras, kod_dok) VALUES (?,?,?,?)';
+
+            /* Prepare statement */
+            $stmt = $conn->prepare($sql);
+            if($stmt === false) {
+                trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+            }
+
+            /* Bind parameters. TYpes: s = string, i = integer, d = double,  b = blob */
+            $stmt->bind_param('iiii',$_SESSION['teras_index'],$_SESSION['checked_value'],$_SESSION['kod_teras'],$_SESSION['kod_dok_to_be_updated']);
+
+            /* Execute statement */
+            $stmt->execute();
+
+            // echo $stmt->insert_id;
+            // echo $stmt->affected_rows;
+
+            $stmt->close();
+        }
+        elseif ($existing_teras_dok==4) { // if the entry for the kod_dok in teras_dok already existed
+            $sql='UPDATE teras_dok SET checked_value=?  WHERE kod_dok=? AND kod_teras=?';
+
+            /* Prepare statement */
+            $stmt = $conn->prepare($sql);
+            if($stmt === false) {
+                trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+            }
+
+            /* Bind parameters. TYpes: s = string, i = integer, d = double,  b = blob */
+            $stmt->bind_param('iii',$_SESSION['checked_value'],$_SESSION['kod_dok_to_be_updated'],$_SESSION['kod_teras']);
+
+            /* Execute statement */
+            $stmt->execute();
+
+            // echo $stmt->insert_id;
+            // echo $stmt->affected_rows;
+
+            $stmt->close();
+        }
+
+        $teras_index++;
+    }
+
+    $rs->free();
+    $conn->close();
+}
+
 function fnUpdateCheckedTeras($a,$b,$c,$d){
     $DBServer       = $_SESSION['DBServer'];
     $DBUser         = $_SESSION['DBUser'];
@@ -2047,6 +2172,86 @@ function fnUpdateCheckedTeras($a,$b,$c,$d){
         }
 
         /* Bind parameters. TYpes: s = string, i = integer, d = double,  b = blob */
+        // fnRunAlert("function.php:2050 ".'$_SESSION[kod_dok_to_be_updated] ='.$_SESSION['kod_dok_to_be_updated']);
+        // fnRunAlert("function.php:2050 ".'$_SESSION[checked_value] ='.$_SESSION['checked_value']);
+        // fnRunAlert("function.php:2050 ".'$_SESSION[kod_teras] ='.$_SESSION['kod_teras']);
+        $stmt->bind_param('iii',$_SESSION['checked_value'],$_SESSION['kod_dok_to_be_updated'],$_SESSION['kod_teras']);
+
+        /* Execute statement */
+        $stmt->execute();
+
+        // echo $stmt->insert_id;
+        // echo $stmt->affected_rows;
+
+        $stmt->close();
+
+        $teras_index++;
+    }
+
+    $rs->free();
+    $conn->close();
+}
+
+function fnUpdateCheckedTerasForSearchModule_v2($a,$b,$c,$d){
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
+
+    $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+
+    // check connection
+    if ($conn->connect_error) {
+        trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+    }
+
+    $sql='SELECT kod_teras, nama_teras FROM teras_strategik WHERE kod_teras != 1 AND papar_data = 1';
+
+    $rs=$conn->query($sql);
+
+    if($rs === false) {
+        trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+    } else {
+        $rows_returned = $rs->num_rows;
+        $_SESSION['bil_teras'];
+    }
+
+    $rs=$conn->query($sql);
+
+    if($rs === false) {
+        trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+    } else {
+        $arr = $rs->fetch_all(MYSQLI_ASSOC);
+    }
+
+    $teras_index = 0;
+    foreach($arr as $row) {
+        # capture teras_index
+        $_SESSION['teras_index'] = $teras_index;
+        # capture checked value (1 or 0)
+        if (isset($_POST["teras_$teras_index"]) != 0) {
+            $_SESSION['checked_value'] = 1;
+        }
+        else {
+            $_SESSION['checked_value'] = 0;
+        }
+        # capture kod_teras
+        $_SESSION['kod_teras'] = $row['kod_teras'];
+        # capture kod_dok
+        # $_SESSION['new_doc_id'] - generated in fnUploadFilesRename
+
+        $sql='UPDATE teras_dok SET checked_value=?  WHERE kod_dok=? AND kod_teras=?';
+
+        /* Prepare statement */
+        $stmt = $conn->prepare($sql);
+        if($stmt === false) {
+            trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+        }
+
+        /* Bind parameters. TYpes: s = string, i = integer, d = double,  b = blob */
+        fnRunAlert("function.php:2050 ".'$_SESSION[kod_dok_to_be_updated] ='.$_SESSION['kod_dok_to_be_updated']);
+        fnRunAlert("function.php:2050 ".'$_SESSION[checked_value] ='.$_SESSION['checked_value']);
+        fnRunAlert("function.php:2050 ".'$_SESSION[kod_teras] ='.$_SESSION['kod_teras']);
         $stmt->bind_param('iii',$_SESSION['checked_value'],$_SESSION['kod_dok_to_be_updated'],$_SESSION['kod_teras']);
 
         /* Execute statement */
@@ -2161,23 +2366,6 @@ function fnUpdateDocNoUpload($a,$b,$c,$d){
 
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
-    /* an example
-        $product_name = '52 inch TV';
-        $product_code = '9879798';
-        $find_id = 1;
-
-        $statement = $mysqli->prepare("UPDATE products SET product_name=?, product_code=? WHERE ID=?");
-
-        //bind parameters for markers, where (s = string, i = integer, d = double,  b = blob)
-        $statement->bind_param('ssi', $product_name, $product_code, $find_id);
-        $results =  $statement->execute();
-        if($results){
-            print 'Success! record updated'; 
-        }else{
-            print 'Error : ('. $mysqli->errno .') '. $mysqli->error;
-        }
-    */
-
     // check connection
     if ($conn->connect_error) {
         trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
@@ -2223,32 +2411,6 @@ function fnUpdateDocNoUpload($a,$b,$c,$d){
     $stmt->execute();
 
     if ($stmt) {
-        # clear dok sokongan untuk rekod ni dulu, kalau ada dok sokongan baharu hendak dimuat naik
-        /*
-        if ($_SESSION['bilDokSokUtkMuatNaik']>0) {
-            $delDokSokonganSql = "DELETE FROM dok_sokongan WHERE kod_dok_fk = '$kod_dok_selected'";
-        }
-        $delDokSokonganResult = $conn->query($delDokSokonganSql);
-        if ($_SESSION['slot01_OK'] == 1) {
-            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot01 berjaya direkod ke db.";
-            fnUpdateDokSokongan($_SESSION['nama_dok_asal_slot01'], $_SESSION['nama_dok_disimpan_slot01'], $kod_dok_selected);
-            // fnInsertDokSokongan("$_SESSION[nama_dok_asal_slot01]", "$_SESSION[nama_dok_disimpan_slot01]");
-            // fnRunAlert("Ni selepas insert dok sokongan slot01.");
-        }
-        if ($_SESSION['slot02_OK'] == 1) {
-            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot02 berjaya direkod ke db.";
-            fnUpdateDokSokongan($_SESSION['nama_dok_asal_slot02'], $_SESSION['nama_dok_disimpan_slot02'], $kod_dok_selected);
-        }
-        if ($_SESSION['slot03_OK'] == 1) {
-            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot03 berjaya direkod ke db.";
-            fnUpdateDokSokongan($_SESSION['nama_dok_asal_slot03'], $_SESSION['nama_dok_disimpan_slot03'], $kod_dok_selected);
-        }
-        if ($_SESSION['slot04_OK'] == 1) {
-            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot04 berjaya direkod ke db.";
-            fnUpdateDokSokongan($_SESSION['nama_dok_asal_slot04'], $_SESSION['nama_dok_disimpan_slot04'], $kod_dok_selected);
-        }
-        $_SESSION['mesejBerjaya'] = ""; #kosongkan mesej berjaya
-        */
         fnRunAlert("Rekod BERJAYA dikemaskini.");
     }
     else {
@@ -2570,6 +2732,62 @@ function fnInsertNewSupportDoc_v2($a,$b,$c,$d){
     fnClearSessionNewDoc();
 }
 
+function fnInsertNewSupportDocForUpdate_v2($a,$b,$c,$d){
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
+
+    $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+
+    // check connection
+    if ($conn->connect_error) {
+        trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+    }
+
+    $tanda_hapus = 1;
+    
+    /* Execute statement */
+    // $stmt->execute();
+    # 20170126 trying this
+    // fnRunAlert("Ni sebelum insert dok sokongan.");
+    // fnRunAlert("insertOK = ".$_SESSION['insertOK']);
+    // fnRunAlert("uploadOk = ".$_SESSION['uploadOk']);
+    // fnRunAlert("slot01_OK = ".$_SESSION['slot01_OK']);
+    if ($_SESSION['uploadOk'] == 1) {
+        // fnRunAlert("Ni selepas execute stmt.");
+        // $_SESSION['insertOK'] = 1; # tanda rekod berjaya dimasukkan dalam table dokumen
+        if ($_SESSION['slot01_OK'] == 1) {
+            // fnRunAlert("Ni baru mula if slot01.");
+            $_SESSION['mesejBerjaya'] = "Dokumen sokongan berjaya direkod ke db.";
+            fnUpdateDokSokongan_v2($_SESSION['nama_dok_asal_slot01'], $_SESSION['nama_dok_disimpan_slot01'], $_SESSION['kod_dok_langkah_2']);
+            // fnInsertDokSokongan("$_SESSION[nama_dok_asal_slot01]", "$_SESSION[nama_dok_disimpan_slot01]");
+            // fnRunAlert("Ni selepas insert dok sokongan slot01.");
+        }
+        if ($_SESSION['slot02_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot02 berjaya direkod ke db.";
+            fnUpdateDokSokongan_v2($_SESSION['nama_dok_asal_slot02'], $_SESSION['nama_dok_disimpan_slot02'], $_SESSION['kod_dok_langkah_2']);
+        }
+        if ($_SESSION['slot03_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot03 berjaya direkod ke db.";
+            fnUpdateDokSokongan_v2($_SESSION['nama_dok_asal_slot03'], $_SESSION['nama_dok_disimpan_slot03'], $_SESSION['kod_dok_langkah_2']);
+        }
+        if ($_SESSION['slot04_OK'] == 1) {
+            $_SESSION['mesejBerjaya'] = "Dokumen Sokongan Slot04 berjaya direkod ke db.";
+            fnUpdateDokSokongan_v2($_SESSION['nama_dok_asal_slot04'], $_SESSION['nama_dok_disimpan_slot04'], $_SESSION['kod_dok_langkah_2']);
+        }
+        $_SESSION['mesejBerjaya'] = ""; #kosongkan mesej berjaya
+    }
+    else {
+        $_SESSION['insertOK'] = 0;
+    }
+
+    // $stmt->close();
+
+    $conn->close();
+    fnClearSessionNewDoc();
+}
+
 function fnUpdateDokSokongan($namaDokAsal,$namaDokDisimpan,$kodDokFK){
     $DBServer       = $_SESSION['DBServer'];
     $DBUser         = $_SESSION['DBUser'];
@@ -2607,6 +2825,57 @@ function fnUpdateDokSokongan($namaDokAsal,$namaDokDisimpan,$kodDokFK){
     // fnRunAlert("Marker 08");
     $nama_dok_asal = $namaDokAsal;
     $nama_dok_disimpan = $namaDokDisimpan;
+    # execute
+    // fnRunAlert("Marker 09");
+    if ($dokSokonganStmt->execute()) {
+        $_SESSION['insertRekodDokSokonganOK'] = 1; # berjaya
+        fnRunAlert("$_SESSION[mesejBerjaya]");
+    }
+    else {
+        $_SESSION['insertRekodDokSokonganOK'] = 0; # gagal
+    }
+    # close
+    $dokSokonganStmt->close();
+}
+
+function fnUpdateDokSokongan_v2($namaDokAsal,$namaDokDisimpan,$kodDokFK){
+    $DBServer       = $_SESSION['DBServer'];
+    $DBUser         = $_SESSION['DBUser'];
+    $DBPass         = $_SESSION['DBPass'];
+    $DBName         = $_SESSION['DBName'];
+    $kod_dok_fk = $kodDokFK;
+    $nama_dok_asal = $namaDokAsal;
+    $nama_dok_disimpan = $namaDokDisimpan;
+    // fnRunAlert('$kod_dok_fk = '.$kod_dok_fk);
+    $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
+    # operasi insert ke dalam table dok_sokongan. satu untuk setiap dok_sokongan.
+    # prepare statement
+    // fnRunAlert("Marker 01");
+    $dokSokonganSql = "INSERT INTO dok_sokongan (kod_dok_fk, nama_dok_asal, nama_dok_disimpan) VALUES (?, ?, ?)";
+    // fnRunAlert("Marker 02");
+    $dokSokonganStmt = $conn->prepare($dokSokonganSql);
+    # if statement is false
+    // fnRunAlert("Marker 03");
+    if($dokSokonganStmt === false) {
+        trigger_error('Wrong SQL: ' . $dokSokonganSql . ' Error: ' . $conn->error, E_USER_ERROR);
+    }
+    # bind parameter
+    // fnRunAlert("Marker 04");
+    $dokSokonganStmt->bind_param('iss', $kod_dok_fk, $nama_dok_asal, $nama_dok_disimpan);
+    # kira bil rekod dalam 'dokumen' dan ambil m = jumlah rekod + 1
+    # semak sama ada terdapat rekod dengan kod_dok = nilai m
+    // fnRunAlert("Marker 05");
+    $semakBilDokSql = "SELECT kod_dok FROM dokumen"; // tak perlu semak tanda_hapus sebab nak tahu bilangan semua
+    // fnRunAlert("Marker 06");
+    $semakBilDokStmt = $conn->query($semakBilDokSql);
+    // fnRunAlert("Marker 07");
+    if($semakBilDokStmt === false) {
+        trigger_error('Wrong SQL: ' . $semakBilDokSql . ' Error: ' . $conn->error, E_USER_ERROR);
+    }
+    else {
+        $rows_returned = $semakBilDokStmt->num_rows;
+    }
+    // fnRunAlert("Marker 08");
     # execute
     // fnRunAlert("Marker 09");
     if ($dokSokonganStmt->execute()) {
@@ -3775,6 +4044,7 @@ function fnUploadFilesRename_v2($nama_dok){
         }
     }
     // Check if file already exists
+    $_SESSION['slot01_OK'] = 1;
     if (file_exists($target_file)) {
         fnRunAlert("Maaf, fail telah wujud.");
         if ($nama_dok == "nama_dok") {
@@ -3850,7 +4120,7 @@ function fnUploadFilesRename_v2($nama_dok){
     elseif ($uploadOk == 1) {
         $_SESSION['uploadOk'] = 1;
     }
-}
+}// end of fnUploadFilesRename_v2
 
 function fnUploadFilesRename_bak20180723(){
     /* Getting file info and separating the name */
@@ -4977,7 +5247,7 @@ function fnShowDocReportSelectYear(){
     else {
         // fnRunAlert("Bukan Carian");
         // $sql="SELECT DISTINCT tahun_dok FROM dokumen WHERE tanda_hapus = 1 ORDER BY tahun_dok DESC";
-        $sql_tahun="SELECT DISTINCT tahun_dok FROM dokumen WHERE tanda_hapus = 1 ORDER BY tahun_dok DESC";
+        $sql_tahun="SELECT DISTINCT tahun_dok FROM dokumen WHERE tanda_hapus = 1 AND tahun_dok > 1000 ORDER BY tahun_dok DESC";
     }
 
     $rs=$conn->query($sql_tahun);
@@ -5985,7 +6255,7 @@ function fnShowDocTableContent_bak201808021139($a,$b,$c,$d,$e,$f,$g){
             <td hidden><?php echo $row[$field01name] ?></td>
             <td><?php echo stripslashes(strtoupper($row['tajuk_dok'])) ?> <?php echo $perkataanBil ?> <?php echo $bilDok ?><?php echo $strokeBil ?><?php echo $row['tahun_dok'] ?></td>
             <td style='align-content: center;' align='center'>
-                <button type='submit' id='btn_papar_borang_kemaskini' name='btn_papar_borang_kemaskini' class='btn btn-success' title='Kemaskini' value='<?php echo $row['kod_dok'] ?>'><i class='fa fa-edit'></i></button>
+                <button type='submit' id='btn_papar_borang_kemaskini' name='btn_papar_borang_kemaskini' class='btn btn-success' title='Kemaskini.' value='<?php echo $row['kod_dok'] ?>'><i class='fa fa-edit'></i></button>
                 <button type='submit' id='btn_papar_perincian_dokumen' name='btn_papar_perincian_dokumen' class='btn btn-success' title='Papar' value='<?php echo $row['kod_dok'] ?>'><i class='fa fa-eye'></i></button>
                 <?php 
                 if ($_SESSION['status_pentadbir_super']==1 OR $_SESSION['status_pentadbir_dokumen']==2) {
@@ -6810,6 +7080,7 @@ function fnShowDocTableContentForAdvancedSearchOriginal($a,$b,$c,$d){
                 $strokeBil = "/";
                 $bilDok = $row['bil_dok'];
                 ?>
+                <?php /* Senarai hasil carian lengkap dalam searchdoc_o.php */ ?>
                 <tr><!-- senarai dalam carian lengkap -->
                     <td><?php echo $counter ?></td>
                     <td hidden><?php echo $row[$field01name] ?></td>
@@ -6819,6 +7090,7 @@ function fnShowDocTableContentForAdvancedSearchOriginal($a,$b,$c,$d){
                         <button type='submit' id='btn_papar_perincian_dokumen' name='btn_papar_perincian_dokumen' class='btn btn-success' title='Papar' value='<?php echo $row['kod_dok'] ?>'><i class='fa fa-eye'></i></button>
                         <?php 
                         if ($_SESSION['status_pentadbir_super']==1 OR $_SESSION['status_pentadbir_dokumen']==2) {
+                            $_SESSION['sourceOfDeletion'] = "searchdoc_o.php";
                             ?>
                             <a href="delete.php?id=<?php echo $row['kod_dok']; ?>&source=s" title="Hapus Rekod <?php echo $row['kod_dok']; ?>" class='btn btn-danger' onclick="return confirm('Anda pasti untuk padamkan rekod?')"><i class="fa fa-trash"></i></a>
                             <?php
@@ -6829,7 +7101,7 @@ function fnShowDocTableContentForAdvancedSearchOriginal($a,$b,$c,$d){
                 <?php  
                 $kod_dok_ini = $row['kod_dok'];
                 /* paparkan kategori dan status */
-                $sql_detail_dok = "SELECT nama_kat, nama_status FROM dokumen, kategori, status WHERE dokumen.kod_dok = '$kod_dok_ini' AND dokumen.kod_kat = kategori.kod_kat AND dokumen.kod_status  = status.kod_status";  
+                $sql_detail_dok = "SELECT nama_kat, nama_status FROM dokumen, kategori, status WHERE dokumen.kod_dok = '$kod_dok_ini' AND dokumen.kod_kat = kategori.kod_kat AND dokumen.kod_status  = status.kod_status AND dokumen.tanda_hapus = 1";  
 
                 $rs_detail_dok=$conn->query($sql_detail_dok);
 
@@ -7658,7 +7930,7 @@ function fnShowViewDocContent($a,$b,$c,$d,$e,$f,$g){
         trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
     }
 
-    $sql="SELECT * FROM $table01name WHERE $field01name = $searchvalue ORDER BY $field01name ASC";
+    $sql="SELECT * FROM dokumen WHERE kod_dok = $searchvalue ORDER BY kod_dok ASC";
     // fnRunAlert($tablename);
     // $sql="SELECT $field01name, $field02name, papar_data FROM $table01name WHERE $field01name = $searchvalue";
 
@@ -10928,7 +11200,7 @@ function fnDashCatDisplay(){
     # sediakan pernyataan sql
 
     ## Cari kod-kod kategori, nama kategori
-    $sql = "SELECT * FROM kategori WHERE kod_kat != '1' ORDER BY nama_kat";
+    $sql = "SELECT * FROM kategori WHERE kod_kat != '1' AND papar_data = 1 ORDER BY nama_kat";
     ## Bagi setiap kategori, kira bilangan
 
     # larikan pernyataan
@@ -11000,7 +11272,7 @@ function fnCountDocInRep(){
     # sediakan pernyataan sql
 
     ## Cari kod-kod kategori, nama kategori
-    $sql = "SELECT * FROM dokumen WHERE tanda_hapus<>0";
+    $sql = "SELECT * FROM dokumen WHERE tanda_hapus<>0 AND (kod_status <> 1 AND kod_status <> 0)";
     ## Bagi setiap kategori, kira bilangan
 
     # larikan pernyataan
@@ -11041,7 +11313,7 @@ function fnCountActiveDocInRep(){
     # sediakan pernyataan sql
 
     ## Cari kod-kod kategori, nama kategori
-    $sql = "SELECT * FROM dokumen WHERE kod_status = '2' AND tanda_hapus<>0";
+    $sql = "SELECT * FROM dokumen WHERE kod_status = '2' AND tanda_hapus='1'";
     ## Bagi setiap kategori, kira bilangan
 
     # larikan pernyataan
@@ -11240,10 +11512,10 @@ function fnVerifyLogin($a,$b,$c,$d,$e,$f){
     $DBUser         = $_SESSION['DBUser'];
     $DBPass         = $_SESSION['DBPass'];
     $DBName         = $_SESSION['DBName'];
-    fnRunAlert($_SESSION['DBServer']);
-    fnRunAlert($_SESSION['DBUser']);
-    fnRunAlert($_SESSION['DBPass']);
-    fnRunAlert($_SESSION['DBName']);
+    // fnRunAlert($_SESSION['DBServer']);
+    // fnRunAlert($_SESSION['DBUser']);
+    // fnRunAlert($_SESSION['DBPass']);
+    // fnRunAlert($_SESSION['DBName']);
     $conn = new mysqli($DBServer, $DBUser, $DBPass, $DBName);
 
     // check connection

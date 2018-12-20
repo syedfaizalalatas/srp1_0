@@ -82,8 +82,9 @@ if ($deleteSource == "l") {
 	$url = "listdoc.php?s=n";
 }
 else {
-	$url = "searchdoc.php";
+	$url = "searchdoc_o.php";
 }
+$_SESSION['sourceOfDeletion'] = "";
 // fnRunAlert($url);
 fnRunAlert("Rekod telah dihapuskan.");
 ?>

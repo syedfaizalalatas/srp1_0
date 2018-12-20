@@ -2,17 +2,49 @@
 <?php require "../layouts/lay_adminmaintop.php"; ?>
 <script src="../js/bootbox/bootbox.min.js"></script>
 <?php  
-/*
-errors
-Notice: Undefined index: s in /Users/Salbiyah/Sites/srp1_0d/views/docsmgmt/listdoc.php on line 5
 
-*/
 # check if this page is just loaded from the sidebar menu
+// fnRunAlert("pageSource = ".$_SESSION['pageSource']);
 // fnRunAlert("pageSource = ".$_SESSION['pageSource']);
 if ($_SESSION['pageSource'] == 'new') {
   $_GET['s'] = 'n';
+  // fnRunAlert("s = ".$_GET['s']);
+  $_SESSION['pageSource'] = '';
 }
 
+# clear session from other forms newuser, updateuser, updatedoc
+if (isset($_GET['s']) == 'n') {
+  // form is opened from the sidebar, clear the session
+  $_POST['btn_tutup_perincian_dokumen'] = 1;
+  $_POST['btn_papar_borang_kemaskini'] = "";
+  // $_POST['btn_papar_perincian_dokumen'] = "";
+  $_SESSION['updateDocOK'] = "";
+  $_SESSION['doclist_search_keyword'] = "";
+  $_GET['s'] = "";
+  fnClearSessionNewUser();
+  fnClearSessionListUser();
+  fnClearSessionNewDoc();
+  fnClearSessionListDoc();
+}
+
+// fnClearSessionForListPages();
+$_SESSION['page_title'] = "Pengurusan Rekod Dokumen";
+$_SESSION['addnew_form_title'] = "Borang Tambah Rekod Dokumen";
+$_SESSION['addnew_form_action'] = "Simpan Dokumen Baharu";
+$_SESSION['preview_doc_title'] = "Paparan Rekod Dokumen";
+$_SESSION['preview_doc_action'] = "Perincian Dokumen Sedia Ada";
+$_SESSION['update_form_title'] = "Borang Kemaskini Rekod Dokumen";
+$_SESSION['update_form_action'] = "Kemaskini Dokumen Sedia Ada";
+$_SESSION['table_title'] = "Senarai Rekod Dokumen";
+/*$_SESSION['table_action'] = "Senaraikan Dokumen";*//*sebelum diubah pada 20180420*/
+$_SESSION['table_action'] = "Yang Telah Didaftarkan";
+$actionfilename = "listdoc_o.php";
+$table01name = "dokumen";
+$field01name = "kod_dok";
+$field02name = "tajuk_dok";
+
+// fnRunAlert("s = ".$_GET['s']);
+// fnRunAlert("pageSource = ".$_SESSION['pageSource']);
 // if (($_GET['s'] != 's1' AND $_GET['s'] != 's2') OR isset($_GET['s']) OR $_GET['s'] == '') {
 if (!isset($_GET['s']) AND !isset($_POST['btn_papar_perincian_dokumen'])) {
   // fnRunAlert("s = ".$_GET['s']);
@@ -25,7 +57,7 @@ if (!isset($_GET['s']) AND !isset($_POST['btn_papar_perincian_dokumen'])) {
   $_SESSION['status_buka_borang_kemaskini_dokumen'] = "";
   $_SESSION['status_buka_borang_kemaskini_dokumen'] = 0;
 }
-elseif (!isset($_GET['s']) AND isset($_POST['btn_papar_perincian_dokumen'])) {
+elseif ((!isset($_GET['s']) OR $_GET['s'] == "") AND isset($_POST['btn_papar_perincian_dokumen'])) {
   // fnRunAlert("s = ".$_GET['s']);
   // fnRunAlert("0-1");
   // fnRunAlert("btn_papar_perincian_dokumen = ".$_POST['btn_papar_perincian_dokumen']);
@@ -38,10 +70,8 @@ elseif (!isset($_GET['s']) AND isset($_POST['btn_papar_perincian_dokumen'])) {
   $_SESSION['status_buka_borang_kemaskini_dokumen'] = 0;
   $_SESSION['kod_dok_untuk_dikemaskini'] = $_POST['btn_papar_perincian_dokumen'];
   $_SESSION['kod_dok_untuk_dipapar'] = $_POST['btn_papar_perincian_dokumen'];
-}
-
-if ($_SESSION['pageSource'] == 'new') {
-  $_GET['s'] = 'n';
+  // fnRunAlert("btn_papar_perincian_dokumen = ".$_['btn_papar_perincian_dokumen']);
+  // fnRunAlert("kod_dok_untuk_dipapar = ".$_SESSION['kod_dok_untuk_dipapar']);
 }
 
 # When a user clicks the 'show doc detail'
@@ -67,36 +97,6 @@ if ($_SESSION['updateDocOK'] == 1) {
   $_SESSION['status_buka_borang_kemaskini_dokumen'] = 0;
   fnClearSessionListDoc();
 }
-
-# clear session from other forms newuser, updateuser, updatedoc
-if (isset($_GET['s']) == 'n') {
-  // form is opened from the sidebar, clear the session
-  $_POST['btn_tutup_perincian_dokumen'] = "";
-  $_POST['btn_papar_borang_kemaskini'] = "";
-  $_POST['btn_papar_perincian_dokumen'] = "";
-  $_SESSION['updateDocOK'] = "";
-  $_SESSION['doclist_search_keyword'] = "";
-  fnClearSessionNewUser();
-  fnClearSessionListUser();
-  fnClearSessionNewDoc();
-  fnClearSessionListDoc();
-}
-
-fnClearSessionForListPages();
-$_SESSION['page_title'] = "Pengurusan Rekod Dokumen";
-$_SESSION['addnew_form_title'] = "Borang Tambah Rekod Dokumen";
-$_SESSION['addnew_form_action'] = "Simpan Dokumen Baharu";
-$_SESSION['preview_doc_title'] = "Paparan Rekod Dokumen";
-$_SESSION['preview_doc_action'] = "Perincian Dokumen Sedia Ada";
-$_SESSION['update_form_title'] = "Borang Kemaskini Rekod Dokumen";
-$_SESSION['update_form_action'] = "Kemaskini Dokumen Sedia Ada";
-$_SESSION['table_title'] = "Senarai Rekod Dokumen";
-/*$_SESSION['table_action'] = "Senaraikan Dokumen";*//*sebelum diubah pada 20180420*/
-$_SESSION['table_action'] = "Yang Telah Didaftarkan";
-$actionfilename = "listdoc_o.php";
-$table01name = "dokumen";
-$field01name = "kod_dok";
-$field02name = "tajuk_dok";
 
 # when user clicked 'Hapus Rekod!'
 if (isset($_POST['btn_hapus_dokumen'])) {
@@ -407,8 +407,8 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
       $paparPerincian = "";
       // fnRunAlert("Pengesan 2");
       // fnRunAlert("Status Papar = ".$_SESSION['status_papar_perincian_dokumen']);
-      $_SESSION['status_papar_perincian_dokumen'] = 0;
       // fnRunAlert("Status Papar = ".$_SESSION['status_papar_perincian_dokumen']);
+      // fnRunAlert("kod_dok_untuk_dipapar = ".$_SESSION['kod_dok_untuk_dipapar']);
       $kod_dok_untuk_dipapar = $_SESSION['kod_dok_untuk_dipapar'];
     }
     elseif (isset($_POST['btn_tutup_perincian_dokumen'])) {
@@ -426,8 +426,12 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
               <br />
               <form id="form-kemaskini-data" action="<?php echo $actionfilename; ?>" enctype="multipart/form-data" method="POST" data-parsley-validate class="form-horizontal form-label-left">
                 <?php 
-                fnClearTerasDokSessionForUpdateForm();
-                fnShowViewDocContent($DBServer,$DBUser,$DBPass,$DBName,$table01name,$field01name,$field02name); 
+                if ($_SESSION['status_papar_perincian_dokumen'] == 1 AND $_SESSION['kod_dok_untuk_dipapar'] <> "") {
+                  // fnRunAlert("kod_dok_untuk_dipapar = ".$_SESSION['kod_dok_untuk_dipapar']);
+                  fnClearTerasDokSessionForUpdateForm();
+                  fnShowViewDocContent($DBServer,$DBUser,$DBPass,$DBName,$table01name,$field01name,$field02name); 
+                  $_SESSION['status_papar_perincian_dokumen'] = 0;
+                }
                 ?>
                 <div class="form-group">
                   <div class="col-lg-6 col-md-6 col-md-offset-3 col-sm-6 col-xs-12" align="center">
@@ -541,7 +545,7 @@ if (isset($_POST['btn_simpan_dok_dikemaskini'])) {
                   <th width="40">Bil</th>
                   <th width="100" hidden>Kod</th>
                   <th width="">Tajuk</th>
-                  <th width="165">Tindakan</th>
+                  <th width="80">Tindakan</th>
                 </tr>
               </thead>
 

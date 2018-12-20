@@ -72,33 +72,49 @@ if (isset($_POST['sbmt_cari_lengkap'])) {
 	// fnRunAlert("Carian lengkap dimulakan...");
 	# kategori, tahun, tajuk, kementerian, agensi, sektor, bahagian, status
 	$_SESSION['cl_tajuk_dokumen'] = $_POST['cl_tajuk_dokumen']; # beri nilai drp borang
-	$_SESSION['cl_tahun_dokumen'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
-	$_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
 	$_SESSION['kod_kat'] = $_POST['kod_kat']; # beri nilai drp borang
 	$_SESSION['kod_sektor'] = $_POST['kod_sektor']; # beri nilai drp borang
 	$_SESSION['kod_bah'] = $_POST['kod_bah']; # beri nilai drp borang
 	$_SESSION['kod_status'] = $_POST['kod_status']; # beri nilai drp borang
 	$_SESSION['cl_tajuk_dokumen_to_show_below_view'] = $_POST['cl_tajuk_dokumen']; # beri nilai drp borang
-	$_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
 	// fnRunAlert("Tahun mula = ".$_POST['cl_tahun_dokumen']);
 	// fnRunAlert("Tahun akhir = ".$_POST['cl_tahun_dokumen_hingga']);
-	if ($_POST['cl_tahun_dokumen_hingga']<>"") {
-			if ($_POST['cl_tahun_dokumen']>$_POST['cl_tahun_dokumen_hingga']) {
-				# code...
-				$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
-				$_SESSION['cl_tahun_dokumen_hingga'] = $_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'];
-			} else {
-				$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen_hingga']; # beri nilai drp borang
-				$_SESSION['cl_tahun_dokumen_hingga'] = $_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'];
-			}
-			if ($_POST['cl_tahun_dokumen'] == "") {
-				$_SESSION['cl_tahun_dokumen'] = $_SESSION['cl_tahun_dokumen_hingga'];
-				$_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_SESSION['cl_tahun_dokumen_hingga']; # beri nilai drp borang
-			}
+	if ($_POST['cl_tahun_dokumen'] <> "" && $_POST['cl_tahun_dokumen_hingga'] <> "") {
+		// fnRunAlert("Kombinasi A");
+		$_SESSION['cl_tahun_dokumen'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+		$_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_SESSION['cl_tahun_dokumen']; # beri nilai drp borang
+		if ($_POST['cl_tahun_dokumen']>$_POST['cl_tahun_dokumen_hingga']) {
+			$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+			$_SESSION['cl_tahun_dokumen_hingga'] = $_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'];
+		} else {
+			$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen_hingga']; # beri nilai drp borang
+			$_SESSION['cl_tahun_dokumen_hingga'] = $_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'];
+		}
+	}
+	elseif ($_POST['cl_tahun_dokumen'] <> "" && $_POST['cl_tahun_dokumen_hingga'] == "") {
+		// fnRunAlert("Kombinasi B");
+		$_SESSION['cl_tahun_dokumen'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+		$_SESSION['cl_tahun_dokumen_hingga'] = $_SESSION['cl_tahun_dokumen']; # beri nilai drp borang
+		$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_SESSION['cl_tahun_dokumen']; # beri nilai drp borang						
+	}
+	elseif ($_POST['cl_tahun_dokumen'] == "" && $_POST['cl_tahun_dokumen_hingga'] <> "") {
+		// fnRunAlert("Kombinasi C");
+		$_SESSION['cl_tahun_dokumen_hingga'] = $_POST['cl_tahun_dokumen_hingga'];
+		fnRunAlert("cl_tahun_dokumen_hingga = ".$_SESSION['cl_tahun_dokumen_hingga']);
+		$_SESSION['cl_tahun_dokumen'] = $_SESSION['cl_tahun_dokumen_hingga'];
+		fnRunAlert("cl_tahun_dokumen = ".$_SESSION['cl_tahun_dokumen']);
+		$_SESSION['cl_tahun_dokumen_to_show_below_view'] = $_SESSION['cl_tahun_dokumen_hingga']; # beri nilai drp borang
+		fnRunAlert("cl_tahun_dokumen_to_show_below_view = ".$_SESSION['cl_tahun_dokumen_to_show_below_view']);
 	}
 	else {
-			$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = $_POST['cl_tahun_dokumen']; # beri nilai drp borang
+		// fnRunAlert("Kombinasi D");
+		$_SESSION['cl_tahun_dokumen'] = "";
+		$_SESSION['cl_tahun_dokumen_to_show_below_view'] = "";
+		$_SESSION['cl_tahun_dokumen_hingga'] = "";
+		$_SESSION['cl_tahun_dokumen_hingga_to_show_below_view'] = "";
 	}
+	// fnRunAlert("cl_tahun_dokumen = ".$_SESSION['cl_tahun_dokumen']." & cl_tahun_dokumen_hingga = ".$_SESSION['cl_tahun_dokumen_hingga']);
+	// fnRunAlert("cl_tahun_dokumen_to_show_below_view = ".$_SESSION['cl_tahun_dokumen_to_show_below_view']);
 	$_SESSION['kod_kat_to_show_below_view'] = $_POST['kod_kat']; # beri nilai drp borang
 	$_SESSION['kod_sektor_to_show_below_view'] = $_POST['kod_sektor']; # beri nilai drp borang
 	$_SESSION['kod_bah_to_show_below_view'] = $_POST['kod_bah']; # beri nilai drp borang
@@ -883,7 +899,7 @@ else {
 									<select class="form-control col-md-7 col-xs-12" id="cl_tahun_dokumen" name="cl_tahun_dokumen">
 										<option value="">Sila pilih...</option>
 										<?php  
-										$tahunTerawal = 1900;
+										$tahunTerawal = 1940;
 										$tahunSemasa = date("Y");
 										// fnRunAlert("Tahun Semasa = ".$tahunSemasa);
 										$tahunDipaparkan = $tahunTerawal;
@@ -903,7 +919,7 @@ else {
 									<select class="form-control col-md-7 col-xs-12" id="cl_tahun_dokumen_hingga" name="cl_tahun_dokumen_hingga">
 										<option value="">Sila pilih...</option>
 										<?php  
-										$tahunTerawal = 1900;
+										$tahunTerawal = 1940;
 										$tahunSemasa = date("Y");
 										// fnRunAlert("Tahun Semasa = ".$tahunSemasa);
 										$tahunDipaparkan = $tahunSemasa;
