@@ -1652,7 +1652,7 @@ else {
 										if ($_SESSION['status_pentadbir_super']==1 OR $_SESSION['status_pentadbir_dokumen']==2) {
 											//fnRunAlert("(1653) kod_dok_to_delete = ".$_SESSION['kod_dok_to_delete']);
 											?>
-											<a href='delete.php?id=<?php echo $_SESSION[kod_dok_to_delete]; ?>&source=l' title="Hapus Rekod <?php echo $_SESSION['kod_dok_to_delete']; ?>" class='btn btn-danger' onclick="return confirm('Anda pasti untuk padamkan rekod?')">Hapus Rekod</a>
+											<a href="delete.php?id=<?php echo $_SESSION['kod_dok_to_delete']; ?>&source=l" title="Hapus Rekod <?php echo $_SESSION['kod_dok_to_delete']; ?>" class='btn btn-danger' onclick="return confirm('Anda pasti untuk padamkan rekod?')">Hapus Rekod</a>
 											<?php
 											$button_delete = "<button type='submit' id='btn_hapus_dokumen' name='btn_hapus_dokumen' class='btn btn-danger' title='Hapuskan Rekod Ini' value='$_SESSION[kod_dok_to_delete]'>Hapus Rekod <i class='fa fa-trash'></i></button>";
 										}
